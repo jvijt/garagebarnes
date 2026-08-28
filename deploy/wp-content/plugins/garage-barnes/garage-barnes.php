@@ -67,7 +67,7 @@ function gb_bootstrap_site_pages() {
     update_option('gb_site_page_ids', $created, false);
     update_option('gb_site_pages_v1_done', 1, false);
 }
-add_action('admin_init', 'gb_bootstrap_site_pages');
+add_action('init', 'gb_bootstrap_site_pages');
 
 function gb_render_global_header() {
     if (is_admin()) {
