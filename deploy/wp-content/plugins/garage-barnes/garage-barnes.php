@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Garage Barnes
  * Description: Custom functionality and design prototypes for the Garage Barnes WordPress website.
- * Version: 0.2.0
+ * Version: 0.2.1
  * Author: Garage Barnes
  */
 
@@ -10,15 +10,18 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('GB_PLUGIN_VERSION', '0.2.0');
+define('GB_PLUGIN_VERSION', '0.2.1');
 define('GB_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 function gb_enqueue_assets() {
+    $css_file = plugin_dir_path(__FILE__) . 'assets/css/garage-barnes.css';
+    $css_version = file_exists($css_file) ? (string) filemtime($css_file) : GB_PLUGIN_VERSION;
+
     wp_register_style(
         'garage-barnes-site',
         GB_PLUGIN_URL . 'assets/css/garage-barnes.css',
         array(),
-        GB_PLUGIN_VERSION
+        $css_version
     );
 }
 add_action('wp_enqueue_scripts', 'gb_enqueue_assets');
