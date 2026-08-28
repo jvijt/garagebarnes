@@ -1,2 +1,0 @@
-Garage Barnes GitHub deployment test.
-If you can read this file on the server, the development branch deployment is working correctly.
