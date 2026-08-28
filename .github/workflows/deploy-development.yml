@@ -8,14 +8,14 @@ on:
 
 jobs:
   deploy:
-    name: FTP dry-run deployment
+    name: FTP deployment
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout development
         uses: actions/checkout@v6
 
-      - name: Test FTP deployment
+      - name: Deploy to Garage Barnes
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -24,5 +24,4 @@ jobs:
           protocol: ftp
           local-dir: ./deploy/
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
-          dry-run: true
           log-level: standard
