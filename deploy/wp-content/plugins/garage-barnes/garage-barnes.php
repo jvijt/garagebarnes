@@ -2,16 +2,15 @@
 /**
  * Plugin Name: Garage Barnes
  * Description: Custom functionality and design for the Garage Barnes WordPress website.
- * Version: 0.3.1
+ * Version: 0.3.2
  * Author: Garage Barnes
  */
 
-if (!defined('ABSPATH')) {
-    exit;
-}
+if (!defined('ABSPATH')) { exit; }
 
-define('GB_PLUGIN_VERSION', '0.3.1');
+define('GB_PLUGIN_VERSION', '0.3.2');
 define('GB_PLUGIN_URL', plugin_dir_url(__FILE__));
+require_once plugin_dir_path(__FILE__) . 'site-pages.php';
 
 function gb_enqueue_assets() {
     $css_file = plugin_dir_path(__FILE__) . 'assets/css/garage-barnes.css';
@@ -25,11 +24,11 @@ function gb_bootstrap_site_pages() {
     if (get_option('gb_site_pages_v1_done')) return;
     $pages = array(
         'home' => array('title' => 'Home', 'content' => '[garage_barnes_home]'),
-        'auto-service' => array('title' => 'Auto Service', 'content' => '<h1>Auto Service</h1><p>Deze pagina wordt verder opgebouwd in Elementor.</p>'),
-        'takeldienst' => array('title' => 'Takeldienst', 'content' => '<h1>Takeldienst Barnes</h1><p>Deze pagina wordt verder opgebouwd in Elementor.</p>'),
-        'tweedehands' => array('title' => 'Tweedehands', 'content' => '<h1>Tweedehandswagens</h1><p>Hier komt het aanbod uit Garage Barnes Vehicles.</p>'),
-        'over-ons' => array('title' => 'Over ons', 'content' => '<h1>Over Garage Barnes</h1><p>Deze pagina wordt verder opgebouwd in Elementor.</p>'),
-        'contact' => array('title' => 'Contact', 'content' => '<h1>Contact</h1><p>Deze pagina wordt verder opgebouwd in Elementor.</p>'),
+        'auto-service' => array('title' => 'Auto Service', 'content' => '[garage_barnes_auto_service]'),
+        'takeldienst' => array('title' => 'Takeldienst', 'content' => '[garage_barnes_takeldienst]'),
+        'tweedehands' => array('title' => 'Tweedehands', 'content' => '[garage_barnes_tweedehands]'),
+        'over-ons' => array('title' => 'Over ons', 'content' => '[garage_barnes_over_ons]'),
+        'contact' => array('title' => 'Contact', 'content' => '[garage_barnes_contact]'),
     );
     $created = array();
     foreach ($pages as $slug => $data) {
