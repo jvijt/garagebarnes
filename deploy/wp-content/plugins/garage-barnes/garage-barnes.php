@@ -2,13 +2,13 @@
 /**
  * Plugin Name: Garage Barnes
  * Description: Custom functionality and design for the Garage Barnes WordPress website.
- * Version: 0.3.2
+ * Version: 0.3.3
  * Author: Garage Barnes
  */
 
 if (!defined('ABSPATH')) { exit; }
 
-define('GB_PLUGIN_VERSION', '0.3.2');
+define('GB_PLUGIN_VERSION', '0.3.3');
 define('GB_PLUGIN_URL', plugin_dir_url(__FILE__));
 require_once plugin_dir_path(__FILE__) . 'site-pages.php';
 
@@ -72,7 +72,7 @@ function gb_render_global_footer() {
         <div class="gb-footer-brand"><img class="gb-footer-garage-logo" src="<?php echo esc_url($garage_logo); ?>" alt="Garage Barnes"><p>Garage, onderhoud, herstellingen, tweedehandswagens en takeldienst vanuit Hamme.</p><img class="gb-network-logo" src="<?php echo esc_url($network_logo); ?>" alt="1,2,3 AutoService"><span class="gb-network-note">Aangesloten bij 1,2,3 AutoService</span></div>
         <div><span class="gb-footer-label">Adres</span><strong>Zonneke 4</strong><strong>9220 Hamme</strong></div>
         <div><span class="gb-footer-label">Garage</span><a href="tel:+3252570557">+32 52 57 05 57</a><a href="tel:+32477353547">+32 477 35 35 47</a></div>
-        <div><span class="gb-footer-label">Openingsuren</span><strong>Maandag – vrijdag</strong><span>08:00 – 12:00</span><span>13:00 – 18:00</span><span>Za – Zo gesloten</span></div>
+        <div><span class="gb-footer-label">Openingsuren</span><strong>Maandag – vrijdag</strong><span>08:30 – 12:00</span><span>13:00 – 18:00</span><span>Zaterdag – zondag gesloten</span></div>
         <div class="gb-footer-towing"><img class="gb-footer-towing-logo" src="<?php echo esc_url($towing_logo); ?>" alt="Takeldienst Barnes 24/7"><strong>24 uur / 7 dagen</strong><a class="gb-button gb-button-green" href="<?php echo esc_url(home_url('/takeldienst/')); ?>">Pechhulp &amp; takeldienst</a></div>
     </div><div class="gb-shell gb-footer-bottom"><span>© <?php echo esc_html(wp_date('Y')); ?> Garage Barnes BV</span><span>Hamme, België</span></div></footer>
     <?php
