@@ -2,13 +2,13 @@
 /**
  * Plugin Name: Garage Barnes
  * Description: Custom functionality and design for the Garage Barnes WordPress website.
- * Version: 0.3.3
+ * Version: 0.3.4
  * Author: Garage Barnes
  */
 
 if (!defined('ABSPATH')) { exit; }
 
-define('GB_PLUGIN_VERSION', '0.3.3');
+define('GB_PLUGIN_VERSION', '0.3.4');
 define('GB_PLUGIN_URL', plugin_dir_url(__FILE__));
 require_once plugin_dir_path(__FILE__) . 'site-pages.php';
 
@@ -49,8 +49,8 @@ add_action('init','gb_bootstrap_site_pages');
 function gb_render_global_header() {
     if (is_admin()) return;
     $home=home_url('/'); $garage=home_url('/auto-service/'); $towing=home_url('/takeldienst/'); $cars=home_url('/tweedehands/'); $about=home_url('/over-ons/'); $contact=home_url('/contact/');
-    $garage_logo = GB_PLUGIN_URL . 'assets/img/garage-barnes-logo.svg';
-    $towing_logo = GB_PLUGIN_URL . 'assets/img/takeldienst-barnes-logo.svg';
+    $garage_logo = GB_PLUGIN_URL . 'assets/img/garage-barnes-logo.png';
+    $towing_logo = GB_PLUGIN_URL . 'assets/img/takeldienst-barnes-logo.png';
     ?>
     <div class="gb-topbar"><div class="gb-shell gb-topbar-inner"><div>Zonneke 4 · 9220 Hamme</div><div class="gb-topbar-links"><a href="tel:+3252570557">+32 52 57 05 57</a><a class="gb-topbar-towing" href="<?php echo esc_url($towing); ?>">Takeldienst 24/7</a></div></div></div>
     <header class="gb-site-header"><div class="gb-shell gb-header-inner">
@@ -64,9 +64,9 @@ add_action('wp_body_open','gb_render_global_header',5);
 
 function gb_render_global_footer() {
     if (is_admin()) return;
-    $garage_logo = GB_PLUGIN_URL . 'assets/img/garage-barnes-logo.svg';
-    $towing_logo = GB_PLUGIN_URL . 'assets/img/takeldienst-barnes-logo.svg';
-    $network_logo = GB_PLUGIN_URL . 'assets/img/123-autoservice-logo.svg';
+    $garage_logo = GB_PLUGIN_URL . 'assets/img/garage-barnes-logo-wit.png';
+    $towing_logo = GB_PLUGIN_URL . 'assets/img/takeldienst-barnes-logo-wit.png';
+    $network_logo = GB_PLUGIN_URL . 'assets/img/123-autoservice-logo.png';
     ?>
     <footer class="gb-site-footer"><div class="gb-shell gb-footer-grid">
         <div class="gb-footer-brand"><img class="gb-footer-garage-logo" src="<?php echo esc_url($garage_logo); ?>" alt="Garage Barnes"><p>Garage, onderhoud, herstellingen, tweedehandswagens en takeldienst vanuit Hamme.</p><img class="gb-network-logo" src="<?php echo esc_url($network_logo); ?>" alt="1,2,3 AutoService"><span class="gb-network-note">Aangesloten bij 1,2,3 AutoService</span></div>
