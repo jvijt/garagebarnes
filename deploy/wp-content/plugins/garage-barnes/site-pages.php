@@ -12,14 +12,14 @@ function gb_page_shell($kicker,$title,$intro,$content,$cta_label='Contacteer Gar
 }
 
 function gb_auto_service_shortcode(){
-    $network=GB_PLUGIN_URL.'assets/img/123-autoservice-logo.svg';
+    $network=GB_PLUGIN_URL.'assets/img/123-autoservice-logo.png';
     $content='<div class="gb-content-grid"><div><h2>Onderhoud en herstellingen voor alle merken</h2><p>Garage Barnes staat in voor klein en groot onderhoud, herstellingen en technische diagnose. We communiceren duidelijk en voeren geen bijkomende werken uit zonder uw toestemming.</p><div class="gb-service-list"><span>Klein & groot onderhoud</span><span>Mechanische herstellingen</span><span>Motorwissels</span><span>Elektrische diagnose</span><span>Airco</span><span>Banden & batterijen</span><span>Elektrische voertuigen</span><span>Voorbereiding technische keuring</span><span>Vakantiecheck</span><span>Expertisedossiers</span></div></div><aside class="gb-side-card"><img class="gb-page-network-logo" src="'.esc_url($network).'" alt="1,2,3 AutoService"><h3>Persoonlijke garageservice</h3><p>Een lokaal aanspreekpunt met technische kennis, snelle service en transparante communicatie.</p><a href="tel:+3252570557">+32 52 57 05 57</a></aside></div>';
     return gb_page_shell('Auto Service','Uw wagen in goede handen','Onderhoud, diagnose en herstellingen voor alle merken vanuit onze garage in Hamme.',$content,'Maak een afspraak','/contact/');
 }
 add_shortcode('garage_barnes_auto_service','gb_auto_service_shortcode');
 
 function gb_towing_shortcode(){
-    $logo=GB_PLUGIN_URL.'assets/img/takeldienst-barnes-logo.svg';
+    $logo=GB_PLUGIN_URL.'assets/img/takeldienst-barnes-logo.png';
     $content='<div class="gb-content-grid"><div><img class="gb-page-towing-logo" src="'.esc_url($logo).'" alt="Takeldienst Barnes 24/7"><h2>Pech, panne of ongeval?</h2><p>Takeldienst Barnes is rechtstreeks bereikbaar voor particulieren en werkt daarnaast voor bedrijven, verzekeraars en pechbijstandsorganisaties. We helpen snel, professioneel en duidelijk.</p><div class="gb-service-list"><span>Depannage en takeling</span><span>Pechverhelping op locatie</span><span>Ongeval en berging</span><span>Transport van voertuigen</span><span>Particulieren en bedrijven</span><span>24/7 bereikbaar</span></div></div><aside class="gb-side-card gb-side-card-dark"><span class="gb-kicker">24 uur / 7 dagen</span><h3>Direct hulp nodig?</h3><a class="gb-big-phone" href="tel:+32477353547">+32 477 35 35 47</a><p>Bel rechtstreeks naar Takeldienst Barnes.</p></aside></div>';
     return gb_page_shell('Takeldienst Barnes','24/7 pechhulp en takeldienst','Ook als particulier kunt u ons rechtstreeks bellen bij panne, pech of ongeval.',$content,'Bel Takeldienst Barnes','tel:+32477353547');
 }
