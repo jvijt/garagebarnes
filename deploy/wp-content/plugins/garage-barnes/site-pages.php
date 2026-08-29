@@ -2,11 +2,12 @@
 if (!defined('ABSPATH')) { exit; }
 
 function gb_page_shell($kicker,$title,$intro,$content,$cta_label='Contacteer Garage Barnes',$cta_url='/contact/') {
+    $cta_href = (strpos($cta_url,'tel:')===0 || strpos($cta_url,'mailto:')===0 || strpos($cta_url,'http://')===0 || strpos($cta_url,'https://')===0) ? $cta_url : home_url($cta_url);
     ob_start(); ?>
     <main class="gb-page">
         <section class="gb-page-hero"><div class="gb-shell"><span class="gb-kicker"><?php echo esc_html($kicker); ?></span><h1><?php echo esc_html($title); ?></h1><p><?php echo esc_html($intro); ?></p></div></section>
         <section class="gb-page-content"><div class="gb-shell"><?php echo $content; ?></div></section>
-        <section class="gb-page-cta"><div class="gb-shell gb-page-cta-inner"><div><span class="gb-kicker">Garage Barnes · Hamme</span><h2>We helpen u graag verder.</h2></div><a class="gb-button gb-button-green" href="<?php echo esc_url(home_url($cta_url)); ?>"><?php echo esc_html($cta_label); ?></a></div></section>
+        <section class="gb-page-cta"><div class="gb-shell gb-page-cta-inner"><div><span class="gb-kicker">Garage Barnes · Hamme</span><h2>We helpen u graag verder.</h2></div><a class="gb-button gb-button-green" href="<?php echo esc_url($cta_href); ?>"><?php echo esc_html($cta_label); ?></a></div></section>
     </main><?php return ob_get_clean();
 }
 
