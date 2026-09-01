@@ -36,3 +36,10 @@ function gbv_admin_screen_styles() {
 }
 add_action('admin_head-post.php', 'gbv_admin_screen_styles');
 add_action('admin_head-post-new.php', 'gbv_admin_screen_styles');
+
+function gbv_enqueue_overview_styles() {
+    $file = plugin_dir_path(__FILE__) . 'assets/css/vehicles-overview.css';
+    $version = file_exists($file) ? (string) filemtime($file) : GB_PLUGIN_VERSION;
+    wp_enqueue_style('garage-barnes-vehicles-overview', GB_PLUGIN_URL . 'assets/css/vehicles-overview.css', array('garage-barnes-site'), $version);
+}
+add_action('wp_enqueue_scripts', 'gbv_enqueue_overview_styles', 30);
