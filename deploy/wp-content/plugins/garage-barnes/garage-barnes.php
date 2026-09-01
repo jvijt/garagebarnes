@@ -74,7 +74,7 @@ function gb_render_global_footer() {
         <div><span class="gb-footer-label">Garage</span><a href="tel:+3252570557">+32 52 57 05 57</a><a href="tel:+32477353547">+32 477 35 35 47</a></div>
         <div><span class="gb-footer-label">Openingsuren</span><strong>Maandag – vrijdag</strong><span>08:30 – 12:00</span><span>13:00 – 18:00</span><span>Zaterdag – zondag gesloten</span></div>
         <div class="gb-footer-towing"><img class="gb-footer-towing-logo" src="<?php echo esc_url($towing_logo); ?>" alt="Takeldienst Barnes 24/7"><strong>24 uur / 7 dagen</strong><a class="gb-button gb-button-green" href="<?php echo esc_url(home_url('/takeldienst/')); ?>">Pechhulp &amp; takeldienst</a></div>
-    </div><div class="gb-shell gb-footer-bottom"><span>© <?php echo esc_html(wp_date('Y')); ?> Garage Barnes BV</span><span>Hamme, België</span></div></footer>
+    </div><div class="gb-shell gb-footer-bottom"><span>© <?php echo esc_html(wp_date('Y')); ?> Garage Barnes BV</span><span>website by <a href="https://www.murceke.media" target="_blank" rel="noopener noreferrer">Murceke Media</a></span></div></footer>
     <?php
 }
 add_action('wp_footer','gb_render_global_footer',5);
