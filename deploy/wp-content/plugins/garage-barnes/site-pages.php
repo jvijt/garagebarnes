@@ -40,12 +40,41 @@ function gb_about_shortcode(){
 }
 add_shortcode('garage_barnes_over_ons','gb_about_shortcode');
 
+function gb_contact_fixed_top(){
+    ob_start(); ?>
+    <div class="gb-contact-fixed">
+      <section class="gb-page-hero"><div class="gb-shell"><span class="gb-kicker">Contact</span><h1>Contacteer Garage Barnes</h1><p>Voor een afspraak, technische vraag of directe pechhulp vindt u hier alle contactgegevens.</p></div></section>
+      <section class="gb-page-content gb-contact-cards-section"><div class="gb-shell"><div class="gb-contact-cards"><div><span>Garage</span><h3>Afspraak & informatie</h3><a href="tel:+3252570557">+32 52 57 05 57</a><a href="mailto:info@garagebarnes.com">info@garagebarnes.com</a></div><div><span>Takeldienst 24/7</span><h3>Pech of ongeval</h3><a href="tel:+32477353547">+32 477 35 35 47</a></div><div><span>Adres</span><h3>Garage Barnes BV</h3><p>Zonneke 4<br>9220 Hamme<br>België</p></div><div><span>Openingsuren</span><h3>Maandag – vrijdag</h3><p>08:30–12:00<br>13:00–18:00<br>Zaterdag–zondag gesloten</p></div></div></div></section>
+    </div><?php
+    return ob_get_clean();
+}
+
+function gb_contact_cta(){
+    ob_start(); ?>
+    <section class="gb-page-cta"><div class="gb-shell gb-page-cta-inner"><div><span class="gb-kicker">Garage Barnes · Hamme</span><h2>We helpen u graag verder.</h2></div><a class="gb-button gb-button-green" href="tel:+3252570557">Bel de garage</a></div></section><?php
+    return ob_get_clean();
+}
+
 function gb_contact_shortcode(){
-    $content='<div class="gb-contact-cards"><div><span>Garage</span><h3>Afspraak & informatie</h3><a href="tel:+3252570557">+32 52 57 05 57</a><a href="mailto:info@garagebarnes.com">info@garagebarnes.com</a></div><div><span>Takeldienst 24/7</span><h3>Pech of ongeval</h3><a href="tel:+32477353547">+32 477 35 35 47</a></div><div><span>Adres</span><h3>Garage Barnes BV</h3><p>Zonneke 4<br>9220 Hamme<br>België</p></div><div><span>Openingsuren</span><h3>Maandag – vrijdag</h3><p>08:30–12:00<br>13:00–18:00<br>Zaterdag–zondag gesloten</p></div></div>';
-    $content.='<div class="gb-contact-lower"><div class="gb-contact-form"><span class="gb-kicker">Stuur ons een bericht</span><h2>Contactformulier</h2><form method="post" action="" onsubmit="return false;"><div class="gb-contact-form-row"><label>Naam<input type="text" name="gb_contact_name" autocomplete="name"></label><label>E-mail<input type="email" name="gb_contact_email" autocomplete="email"></label></div><label>Telefoon<input type="tel" name="gb_contact_phone" autocomplete="tel"></label><label>Uw bericht<textarea name="gb_contact_message" rows="6"></textarea></label><button class="gb-button gb-button-dark" type="submit">Bericht verzenden</button><p class="gb-contact-form-note">Het formulier wordt in een volgende stap gekoppeld aan de e-mailverzending.</p></form></div><div class="gb-contact-map"><iframe title="Garage Barnes op Google Maps" src="https://www.google.com/maps?q=Zonneke%204%2C%209220%20Hamme%2C%20Belgium&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div></div>';
-    return gb_page_shell('Contact','Contacteer Garage Barnes','Voor een afspraak, technische vraag of directe pechhulp vindt u hier alle contactgegevens.',$content,'Bel de garage','tel:+3252570557');
+    return '<main class="gb-page">' . gb_contact_fixed_top() . '<section class="gb-contact-elementor-area"><div class="gb-shell"><p class="gb-contact-elementor-hint">Bewerk deze pagina met Elementor om hier het contactformulier en Google Maps toe te voegen.</p></div></section>' . gb_contact_cta() . '</main>';
 }
 add_shortcode('garage_barnes_contact','gb_contact_shortcode');
+
+function gb_contact_enable_elementor_page(){
+    if (get_option('gb_contact_elementor_enabled_v1')) { return; }
+    $page = get_page_by_path('contact', OBJECT, 'page');
+    if ($page && trim((string) $page->post_content) === '[garage_barnes_contact]') {
+        wp_update_post(array('ID' => $page->ID, 'post_content' => ''));
+    }
+    update_option('gb_contact_elementor_enabled_v1', 1, false);
+}
+add_action('init','gb_contact_enable_elementor_page',40);
+
+function gb_contact_wrap_elementor_content($content){
+    if (is_admin() || !is_page('contact') || !in_the_loop() || !is_main_query()) { return $content; }
+    return '<main class="gb-page">' . gb_contact_fixed_top() . '<section class="gb-contact-elementor-area">' . $content . '</section>' . gb_contact_cta() . '</main>';
+}
+add_filter('the_content','gb_contact_wrap_elementor_content',999);
 
 function gb_cars_shortcode(){
     if (function_exists('gbv2_render_archive')) return gb_page_shell('Tweedehandswagens','Selecteerde tweedehandswagens','Een wisselend aanbod voertuigen van Garage Barnes.',gbv2_render_archive(),'Vraag naar ons aanbod','/contact/');
