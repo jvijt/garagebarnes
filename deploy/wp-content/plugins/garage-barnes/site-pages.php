@@ -1,14 +1,18 @@
 <?php
 if (!defined('ABSPATH')) { exit; }
+require_once plugin_dir_path(__FILE__) . 'vehicles-v2.php';
 
 function gb_page_shell($kicker,$title,$intro,$content,$cta_label='Contacteer Garage Barnes',$cta_url='/contact/') {
     $cta_href = (strpos($cta_url,'tel:')===0 || strpos($cta_url,'mailto:')===0 || strpos($cta_url,'http://')===0 || strpos($cta_url,'https://')===0) ? $cta_url : home_url($cta_url);
-    ob_start(); ?>
+    ob_start();
+    ?>
     <main class="gb-page">
         <section class="gb-page-hero"><div class="gb-shell"><span class="gb-kicker"><?php echo esc_html($kicker); ?></span><h1><?php echo esc_html($title); ?></h1><p><?php echo esc_html($intro); ?></p></div></section>
         <section class="gb-page-content"><div class="gb-shell"><?php echo $content; ?></div></section>
         <section class="gb-page-cta"><div class="gb-shell gb-page-cta-inner"><div><span class="gb-kicker">Garage Barnes · Hamme</span><h2>We helpen u graag verder.</h2></div><a class="gb-button gb-button-green" href="<?php echo esc_url($cta_href); ?>"><?php echo esc_html($cta_label); ?></a></div></section>
-    </main><?php return ob_get_clean();
+    </main>
+    <?php
+    return ob_get_clean();
 }
 
 function gb_auto_service_shortcode(){
@@ -38,7 +42,10 @@ function gb_contact_shortcode(){
 add_shortcode('garage_barnes_contact','gb_contact_shortcode');
 
 function gb_cars_shortcode(){
-    $content='<div class="gb-empty-state"><span class="gb-kicker">Garage Barnes Vehicles</span><h2>Ons voertuigaanbod komt hier.</h2><p>We bouwen dit onderdeel uit tot een eigen voertuigenmodule met foto’s, specificaties, prijs en individuele voertuigfiches. Tot dan kunt u ons rechtstreeks contacteren voor het actuele aanbod.</p><a class="gb-button gb-button-dark" href="'.esc_url(home_url('/contact/')).'">Vraag naar het actuele aanbod</a></div>';
+    if (function_exists('gbv2_render_archive')) {
+        return gb_page_shell('Tweedehandswagens','Selecteerde tweedehandswagens','Een wisselend aanbod voertuigen van Garage Barnes.',gbv2_render_archive(),'Vraag naar ons aanbod','/contact/');
+    }
+    $content='<div class="gb-empty-state"><span class="gb-kicker">Garage Barnes Vehicles</span><h2>Ons voertuigaanbod komt hier.</h2><p>Contacteer ons voor het actuele aanbod.</p></div>';
     return gb_page_shell('Tweedehandswagens','Selecteerde tweedehandswagens','Een wisselend aanbod voertuigen van Garage Barnes.',$content);
 }
 add_shortcode('garage_barnes_tweedehands','gb_cars_shortcode');
