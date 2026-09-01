@@ -1,7 +1,5 @@
 <?php
 if (!defined('ABSPATH')) { exit; }
-require_once plugin_dir_path(__FILE__) . 'vehicles.php';
-require_once plugin_dir_path(__FILE__) . 'vehicles-upgrade.php';
 
 function gb_page_shell($kicker,$title,$intro,$content,$cta_label='Contacteer Garage Barnes',$cta_url='/contact/') {
     $cta_href = (strpos($cta_url,'tel:')===0 || strpos($cta_url,'mailto:')===0 || strpos($cta_url,'http://')===0 || strpos($cta_url,'https://')===0) ? $cta_url : home_url($cta_url);
@@ -40,8 +38,8 @@ function gb_contact_shortcode(){
 add_shortcode('garage_barnes_contact','gb_contact_shortcode');
 
 function gb_cars_shortcode(){
-    $content = function_exists('gb_render_vehicle_archive') ? gb_render_vehicle_archive() : '<div class="gb-empty-state"><h2>Voertuigmodule wordt geladen.</h2></div>';
-    return gb_page_shell('Tweedehandswagens','Selecteerde tweedehandswagens','Bekijk het actuele aanbod van Garage Barnes en filter eenvoudig op merk, brandstof, transmissie en prijs.',$content,'Vraag naar een wagen','/contact/');
+    $content='<div class="gb-empty-state"><span class="gb-kicker">Garage Barnes Vehicles</span><h2>Ons voertuigaanbod komt hier.</h2><p>We bouwen dit onderdeel uit tot een eigen voertuigenmodule met foto’s, specificaties, prijs en individuele voertuigfiches. Tot dan kunt u ons rechtstreeks contacteren voor het actuele aanbod.</p><a class="gb-button gb-button-dark" href="'.esc_url(home_url('/contact/')).'">Vraag naar het actuele aanbod</a></div>';
+    return gb_page_shell('Tweedehandswagens','Selecteerde tweedehandswagens','Een wisselend aanbod voertuigen van Garage Barnes.',$content);
 }
 add_shortcode('garage_barnes_tweedehands','gb_cars_shortcode');
 
