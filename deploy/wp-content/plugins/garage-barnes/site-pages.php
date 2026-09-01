@@ -5,14 +5,8 @@ require_once plugin_dir_path(__FILE__) . 'vehicles-admin.php';
 
 function gb_page_shell($kicker,$title,$intro,$content,$cta_label='Contacteer Garage Barnes',$cta_url='/contact/') {
     $cta_href = (strpos($cta_url,'tel:')===0 || strpos($cta_url,'mailto:')===0 || strpos($cta_url,'http://')===0 || strpos($cta_url,'https://')===0) ? $cta_url : home_url($cta_url);
-    ob_start();
-    ?>
-    <main class="gb-page">
-        <section class="gb-page-hero"><div class="gb-shell"><span class="gb-kicker"><?php echo esc_html($kicker); ?></span><h1><?php echo esc_html($title); ?></h1><p><?php echo esc_html($intro); ?></p></div></section>
-        <section class="gb-page-content"><div class="gb-shell"><?php echo $content; ?></div></section>
-        <section class="gb-page-cta"><div class="gb-shell gb-page-cta-inner"><div><span class="gb-kicker">Garage Barnes · Hamme</span><h2>We helpen u graag verder.</h2></div><a class="gb-button gb-button-green" href="<?php echo esc_url($cta_href); ?>"><?php echo esc_html($cta_label); ?></a></div></section>
-    </main>
-    <?php
+    ob_start(); ?>
+    <main class="gb-page"><section class="gb-page-hero"><div class="gb-shell"><span class="gb-kicker"><?php echo esc_html($kicker); ?></span><h1><?php echo esc_html($title); ?></h1><p><?php echo esc_html($intro); ?></p></div></section><section class="gb-page-content"><div class="gb-shell"><?php echo $content; ?></div></section><section class="gb-page-cta"><div class="gb-shell gb-page-cta-inner"><div><span class="gb-kicker">Garage Barnes · Hamme</span><h2>We helpen u graag verder.</h2></div><a class="gb-button gb-button-green" href="<?php echo esc_url($cta_href); ?>"><?php echo esc_html($cta_label); ?></a></div></section></main><?php
     return ob_get_clean();
 }
 
@@ -24,9 +18,19 @@ function gb_auto_service_shortcode(){
 add_shortcode('garage_barnes_auto_service','gb_auto_service_shortcode');
 
 function gb_towing_shortcode(){
-    $logo=GB_PLUGIN_URL.'assets/img/takeldienst-barnes-logo.png';
-    $content='<div class="gb-content-grid"><div><img class="gb-page-towing-logo" src="'.esc_url($logo).'" alt="Takeldienst Barnes 24/7"><h2>Pech, panne of ongeval?</h2><p>Takeldienst Barnes is rechtstreeks bereikbaar voor particulieren en werkt daarnaast voor bedrijven, verzekeraars en pechbijstandsorganisaties. We helpen snel, professioneel en duidelijk.</p><div class="gb-service-list"><span>Depannage en takeling</span><span>Pechverhelping op locatie</span><span>Ongeval en berging</span><span>Transport van voertuigen</span><span>Particulieren en bedrijven</span><span>24/7 bereikbaar</span></div></div><aside class="gb-side-card gb-side-card-dark"><span class="gb-kicker">24 uur / 7 dagen</span><h3>Direct hulp nodig?</h3><a class="gb-big-phone" href="tel:+32477353547">+32 477 35 35 47</a><p>Bel rechtstreeks naar Takeldienst Barnes.</p></aside></div>';
-    return gb_page_shell('Takeldienst Barnes','24/7 pechhulp en takeldienst','Ook als particulier kunt u ons rechtstreeks bellen bij panne, pech of ongeval.',$content,'Bel Takeldienst Barnes','tel:+32477353547');
+    $base=GB_PLUGIN_URL.'assets/img/takeldienst/';
+    $logo=GB_PLUGIN_URL.'assets/img/takeldienst-barnes-logo-wit.png';
+    $hero=$base.'IMG_2172.jpeg'; $recovery=$base.'IMG_2638.jpeg'; $action=$base.'IMG_5230.jpeg'; $fleet=$base.'IMG_6662.JPG';
+    ob_start(); ?>
+    <main class="gb-towing-page">
+      <section class="gb-towing-hero" style="background-image:linear-gradient(90deg,rgba(13,13,13,.91) 0%,rgba(13,13,13,.72) 47%,rgba(13,13,13,.24) 100%),url('<?php echo esc_url($hero); ?>')"><div class="gb-shell gb-towing-hero-inner"><img src="<?php echo esc_url($logo); ?>" alt="Takeldienst Barnes 24/7" class="gb-towing-hero-logo"><span class="gb-eyebrow">Takeldienst Hamme · 24/7 bereikbaar</span><h1>Pech of ongeval?<br>Wij komen helpen.</h1><p>Takeldienst Barnes staat dag en nacht klaar voor pechverhelping, depannage, takeling en berging in Hamme en de ruime omgeving.</p><div class="gb-towing-hero-actions"><a class="gb-button gb-button-green" href="tel:+32477353547">Bel +32 477 35 35 47</a><span>24 uur per dag · 7 dagen per week</span></div></div></section>
+      <section class="gb-towing-intro"><div class="gb-shell gb-towing-intro-grid"><div><span class="gb-kicker">Snel ter plaatse</span><h2>Takeldienst voor particulieren én professionele partners</h2><p>Sta je met pech langs de weg, start je wagen niet meer of ben je betrokken bij een ongeval? Ook als particulier kun je Takeldienst Barnes rechtstreeks bellen. We zorgen voor een snelle en professionele interventie en bekijken ter plaatse wat nodig is.</p><p>Daarnaast werken we samen met <strong>verzekeraars en bijstandsbedrijven</strong> voor interventies, takelingen en bergingen. Dankzij onze eigen takelwagens en technische ervaring kunnen we uiteenlopende situaties veilig en efficiënt aanpakken.</p></div><aside class="gb-towing-phone-card"><span>Direct hulp nodig?</span><strong>24/7</strong><a href="tel:+32477353547">+32 477 35 35 47</a><small>Rechtstreeks Takeldienst Barnes</small></aside></div></section>
+      <section class="gb-towing-services"><div class="gb-shell"><div class="gb-section-heading"><span class="gb-kicker">Onze takeldienst</span><h2>Hulp wanneer het nodig is</h2></div><div class="gb-towing-service-grid"><article><span>01</span><h3>Pechverhelping</h3><p>Problemen onderweg? We komen ter plaatse en bekijken of we je meteen weer op weg kunnen helpen.</p></article><article><span>02</span><h3>Depannage &amp; takeling</h3><p>Wanneer verder rijden niet mogelijk of niet verantwoord is, zorgen we voor een professionele takeling.</p></article><article><span>03</span><h3>Berging na ongeval</h3><p>Ook bij een ongeval of moeilijk bereikbare wagen beschikken we over materiaal en ervaring voor een veilige berging.</p></article><article><span>04</span><h3>24/7 interventies</h3><p>Onze takeldienst is dag en nacht bereikbaar voor particulieren, verzekeraars en bijstandsorganisaties.</p></article></div></div></section>
+      <section class="gb-towing-feature"><div class="gb-shell gb-towing-feature-grid"><div class="gb-towing-feature-image"><img src="<?php echo esc_url($recovery); ?>" alt="Takeldienst Barnes tijdens een voertuigberging"></div><div class="gb-towing-feature-copy"><span class="gb-kicker">Berging &amp; interventie</span><h2>Ook voor complexere situaties</h2><p>Niet elke interventie is een eenvoudige panne. Bij een ongeval, een voertuig dat moeilijk bereikbaar staat of een situatie waarbij extra bergingsmateriaal nodig is, zoeken we naar een veilige en praktische oplossing.</p><p>Onze ervaring als garage én takeldienst betekent dat we niet alleen kunnen takelen, maar ook technisch kunnen inschatten wat er met het voertuig aan de hand is.</p><a class="gb-button gb-button-dark" href="tel:+32477353547">Bel de takeldienst</a></div></div></section>
+      <section class="gb-towing-partners"><div class="gb-shell gb-towing-partners-grid"><div><span class="gb-kicker">Particulier?</span><h2>Je mag ons rechtstreeks bellen.</h2><p>Je hoeft niet via een tussenpersoon te gaan om Takeldienst Barnes te contacteren. Bij panne, pech of ongeval kun je ons rechtstreeks bereiken op ons 24/7-nummer.</p><a href="tel:+32477353547">+32 477 35 35 47</a></div><div><span class="gb-kicker">Professionele partners</span><h2>Verzekeraars &amp; bijstandsbedrijven</h2><p>We voeren ook interventies uit in opdracht van verzekeraars en bijstandsorganisaties. Een lokaal aanspreekpunt, eigen materieel en duidelijke communicatie bij elke opdracht.</p></div></div></section>
+      <section class="gb-towing-gallery"><div class="gb-shell"><div class="gb-section-heading"><span class="gb-kicker">Takeldienst Barnes in actie</span><h2>Eigen materieel. Eigen mensen.</h2></div><div class="gb-towing-gallery-grid"><img src="<?php echo esc_url($action); ?>" alt="Takeldienst Barnes tijdens een interventie"><img src="<?php echo esc_url($fleet); ?>" alt="Wagenpark van Takeldienst Barnes in Hamme"></div></div></section>
+      <section class="gb-towing-area"><div class="gb-shell"><span class="gb-kicker">Regio Hamme</span><h2>Takeldienst in Hamme en ruime omgeving</h2><p>Vanuit onze vestiging in <strong>9220 Hamme</strong> verzorgen we pechverhelping, depannage en takeldienst in de ruime regio, onder meer richting Moerzeke, Kastel, Dendermonde, Zele, Waasmunster, Lokeren, Buggenhout, Lebbeke, Temse en Sint-Niklaas. Zit je buiten deze plaatsen? Bel ons gerust: we bekijken meteen wat mogelijk is.</p><a class="gb-button gb-button-green" href="tel:+32477353547">24/7 · +32 477 35 35 47</a></div></section>
+    </main><?php return ob_get_clean();
 }
 add_shortcode('garage_barnes_takeldienst','gb_towing_shortcode');
 
@@ -43,27 +47,10 @@ function gb_contact_shortcode(){
 add_shortcode('garage_barnes_contact','gb_contact_shortcode');
 
 function gb_cars_shortcode(){
-    if (function_exists('gbv2_render_archive')) {
-        return gb_page_shell('Tweedehandswagens','Selecteerde tweedehandswagens','Een wisselend aanbod voertuigen van Garage Barnes.',gbv2_render_archive(),'Vraag naar ons aanbod','/contact/');
-    }
-    $content='<div class="gb-empty-state"><span class="gb-kicker">Garage Barnes Vehicles</span><h2>Ons voertuigaanbod komt hier.</h2><p>Contacteer ons voor het actuele aanbod.</p></div>';
-    return gb_page_shell('Tweedehandswagens','Selecteerde tweedehandswagens','Een wisselend aanbod voertuigen van Garage Barnes.',$content);
+    if (function_exists('gbv2_render_archive')) return gb_page_shell('Tweedehandswagens','Selecteerde tweedehandswagens','Een wisselend aanbod voertuigen van Garage Barnes.',gbv2_render_archive(),'Vraag naar ons aanbod','/contact/');
+    return gb_page_shell('Tweedehandswagens','Selecteerde tweedehandswagens','Een wisselend aanbod voertuigen van Garage Barnes.','<div class="gb-empty-state"><h2>Ons voertuigaanbod komt hier.</h2></div>');
 }
 add_shortcode('garage_barnes_tweedehands','gb_cars_shortcode');
 
-function gb_upgrade_placeholder_pages(){
-    if(get_option('gb_site_pages_v2_done')) return;
-    $map=array(
-      'auto-service'=>array('<h1>Auto Service</h1><p>Deze pagina wordt verder opgebouwd in Elementor.</p>','[garage_barnes_auto_service]'),
-      'takeldienst'=>array('<h1>Takeldienst Barnes</h1><p>Deze pagina wordt verder opgebouwd in Elementor.</p>','[garage_barnes_takeldienst]'),
-      'tweedehands'=>array('<h1>Tweedehandswagens</h1><p>Hier komt het aanbod uit Garage Barnes Vehicles.</p>','[garage_barnes_tweedehands]'),
-      'over-ons'=>array('<h1>Over Garage Barnes</h1><p>Deze pagina wordt verder opgebouwd in Elementor.</p>','[garage_barnes_over_ons]'),
-      'contact'=>array('<h1>Contact</h1><p>Deze pagina wordt verder opgebouwd in Elementor.</p>','[garage_barnes_contact]')
-    );
-    foreach($map as $slug=>$cfg){
-      $page=get_page_by_path($slug,OBJECT,'page');
-      if($page && trim($page->post_content)===trim($cfg[0])) wp_update_post(array('ID'=>$page->ID,'post_content'=>$cfg[1]));
-    }
-    update_option('gb_site_pages_v2_done',1,false);
-}
+function gb_upgrade_placeholder_pages(){ if(get_option('gb_site_pages_v2_done')) return; $map=array('auto-service'=>'[garage_barnes_auto_service]','takeldienst'=>'[garage_barnes_takeldienst]','tweedehands'=>'[garage_barnes_tweedehands]','over-ons'=>'[garage_barnes_over_ons]','contact'=>'[garage_barnes_contact]'); foreach($map as $slug=>$shortcode){$page=get_page_by_path($slug,OBJECT,'page'); if($page && strpos($page->post_content,'Deze pagina wordt verder opgebouwd')!==false) wp_update_post(array('ID'=>$page->ID,'post_content'=>$shortcode));} update_option('gb_site_pages_v2_done',1,false); }
 add_action('init','gb_upgrade_placeholder_pages',30);
