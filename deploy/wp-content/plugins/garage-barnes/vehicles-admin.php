@@ -1,5 +1,6 @@
 <?php
 if (!defined('ABSPATH')) { exit; }
+require_once plugin_dir_path(__FILE__) . 'vehicles-options.php';
 
 /**
  * Garage Barnes Vehicles admin UX fixes.
@@ -27,8 +28,8 @@ function gbv_admin_screen_styles() {
     echo '<style>
       #post-body-content{margin-bottom:12px}
       #poststuff #post-body.columns-2{margin-right:300px}
-      #gbv2_details .inside,#gbv2_gallery .inside{padding:18px}
-      #gbv2_details h2.hndle{font-size:16px}
+      #gbv2_details .inside,#gbv2_gallery .inside,#gbv_options_checklist .inside{padding:18px}
+      #gbv2_details h2.hndle,#gbv_options_checklist h2.hndle{font-size:16px}
       .postbox-container .postbox{border-radius:4px}
       @media(max-width:1000px){#poststuff #post-body.columns-2{margin-right:0}}
     </style>';
