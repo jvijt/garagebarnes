@@ -1,6 +1,7 @@
 <?php
 if (!defined('ABSPATH')) { exit; }
 require_once plugin_dir_path(__FILE__) . 'vehicles-v2.php';
+require_once plugin_dir_path(__FILE__) . 'vehicles-admin.php';
 
 function gb_page_shell($kicker,$title,$intro,$content,$cta_label='Contacteer Garage Barnes',$cta_url='/contact/') {
     $cta_href = (strpos($cta_url,'tel:')===0 || strpos($cta_url,'mailto:')===0 || strpos($cta_url,'http://')===0 || strpos($cta_url,'https://')===0) ? $cta_url : home_url($cta_url);
