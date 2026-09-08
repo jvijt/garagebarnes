@@ -18,9 +18,10 @@ add_action('wp_head', function () {
         min-width:0;
         background:#fff!important;
         border:1px solid var(--gb-line);
-        font-weight:500!important;
+        font-weight:700!important;
         line-height:1.45;
       }
+      /* Only the explanatory text underneath a service title is lighter. */
       .gb-page .gb-service-list>span small{
         display:block;
         margin-top:8px;
