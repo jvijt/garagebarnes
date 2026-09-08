@@ -9,15 +9,16 @@ add_action('wp_head', function () {
     <style id="gb-mobile-topbar-css">
       @media(max-width:900px){
         .gb-topbar-inner{
-          min-height:58px!important;
-          flex-direction:column!important;
-          align-items:flex-start!important;
-          justify-content:center!important;
-          gap:2px!important;
+          min-height:44px!important;
+          flex-direction:row!important;
+          align-items:center!important;
+          justify-content:space-between!important;
+          gap:12px!important;
         }
         .gb-topbar-inner>div:first-child{
           font-size:0!important;
           line-height:1!important;
+          flex:0 1 auto;
         }
         .gb-topbar-inner>div:first-child::after{
           content:"GARAGE & TAKELDIENST";
@@ -27,16 +28,20 @@ add_action('wp_head', function () {
           line-height:1.2;
           font-weight:800;
           letter-spacing:.11em;
+          white-space:nowrap;
         }
         .gb-topbar-links{
           display:block!important;
           line-height:1.2;
+          margin-left:auto;
+          flex:0 0 auto;
         }
         .gb-topbar-links>a:first-child{
           display:inline-block;
           font-size:0!important;
           color:#fff!important;
           text-decoration:none!important;
+          white-space:nowrap;
         }
         .gb-topbar-links>a:first-child::after{
           content:"+32 57 05 57";
