@@ -10,7 +10,7 @@ add_action('wp_head', function () {
     <style id="gb-contact-map-fixed-css">
       .gb-contact-map-fixed{
         width:min(1180px,calc(100% - 40px));
-        margin:34px auto 0;
+        margin:34px auto 64px;
         background:#eef0eb;
         overflow:hidden;
         border:1px solid #dfe3dc;
@@ -24,7 +24,7 @@ add_action('wp_head', function () {
       @media(max-width:700px){
         .gb-contact-map-fixed{
           width:calc(100% - 28px);
-          margin-top:24px;
+          margin:24px auto 44px;
         }
         .gb-contact-map-fixed iframe{height:360px}
       }
