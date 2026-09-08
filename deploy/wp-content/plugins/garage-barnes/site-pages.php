@@ -44,7 +44,7 @@ function gb_contact_fixed_top(){
     ob_start(); ?>
     <div class="gb-contact-fixed">
       <section class="gb-page-hero"><div class="gb-shell"><span class="gb-kicker">Contact</span><h1>Contacteer Garage Barnes</h1><p>Voor een afspraak, technische vraag of directe pechhulp vindt u hier alle contactgegevens.</p></div></section>
-      <section class="gb-page-content gb-contact-cards-section"><div class="gb-shell"><div class="gb-contact-cards"><div><span>Garage</span><h3>Afspraak & informatie</h3><a href="tel:+3252570557">+32 52 57 05 57</a><a href="mailto:info@garagebarnes.com">info@garagebarnes.com</a></div><div><span>Takeldienst 24/7</span><h3>Pech of ongeval</h3><a href="tel:+32477353547">+32 477 35 35 47</a></div><div><span>Adres</span><h3>Garage Barnes BV</h3><p>Zonneke 4<br>9220 Hamme<br>België</p></div><div><span>Openingsuren</span><h3>Maandag – vrijdag</h3><p>08:30–12:00<br>13:00–18:00<br>Zaterdag–zondag gesloten</p></div></div></div></section>
+      <section class="gb-page-content gb-contact-cards-section"><div class="gb-shell"><div class="gb-contact-cards"><div><span>Garage</span><h3>Afspraak & informatie</h3><a href="tel:+3252570557" style="display:block">+32 52 57 05 57</a><a href="mailto:info@garagebarnes.com" style="display:block">info@garagebarnes.com</a></div><div><span>Takeldienst 24/7</span><h3>Pech of ongeval</h3><a href="tel:+32477353547">+32 477 35 35 47</a></div><div><span>Adres</span><h3>Garage Barnes BV</h3><p>Zonneke 4<br>9220 Hamme<br>België</p></div><div><span>Openingsuren</span><h3>Maandag – vrijdag</h3><p>08:30–12:00<br>13:00–18:00<br>Zaterdag–zondag gesloten</p></div></div></div></section>
     </div><?php
     return ob_get_clean();
 }
