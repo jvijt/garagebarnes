@@ -9,6 +9,13 @@ add_action('wp_footer', function () {
     ?>
     <style id="gb-footer-four-columns-css">
       .gb-footer-grid{grid-template-columns:1.35fr 1fr 1.15fr 1.25fr!important}
+      .gb-footer-grid .gb-footer-label{
+        margin-bottom:10px!important;
+        color:#5dc01d!important;
+        font-size:14px!important;
+        font-weight:800!important;
+        letter-spacing:.10em!important;
+      }
       .gb-footer-grid .gb-footer-address-link,
       .gb-footer-grid .gb-footer-address-link:link,
       .gb-footer-grid .gb-footer-address-link:visited,
