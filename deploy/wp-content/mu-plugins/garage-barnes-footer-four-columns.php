@@ -21,13 +21,13 @@ add_action('wp_footer', function () {
       .gb-footer-grid .gb-footer-address-link:visited,
       .gb-footer-grid .gb-footer-address-link:hover,
       .gb-footer-grid .gb-footer-address-link:focus,
-      .gb-footer-grid .gb-footer-address-link:active,
-      .gb-footer-grid .gb-footer-phone-link,
-      .gb-footer-grid .gb-footer-phone-link:link,
-      .gb-footer-grid .gb-footer-phone-link:visited,
-      .gb-footer-grid .gb-footer-phone-link:hover,
-      .gb-footer-grid .gb-footer-phone-link:focus,
-      .gb-footer-grid .gb-footer-phone-link:active{color:#fff!important}
+      .gb-footer-grid .gb-footer-address-link:active{color:#fff!important}
+      .gb-site-footer .gb-footer-grid a.gb-footer-phone-link,
+      .gb-site-footer .gb-footer-grid a.gb-footer-phone-link:link,
+      .gb-site-footer .gb-footer-grid a.gb-footer-phone-link:visited,
+      .gb-site-footer .gb-footer-grid a.gb-footer-phone-link:hover,
+      .gb-site-footer .gb-footer-grid a.gb-footer-phone-link:focus,
+      .gb-site-footer .gb-footer-grid a.gb-footer-phone-link:active{color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important}
       .gb-footer-grid .gb-footer-address-link{display:flex;flex-direction:column;gap:7px;text-decoration:none!important}
       .gb-footer-grid .gb-footer-address-link:hover{text-decoration:underline!important;text-underline-offset:3px}
       @media(max-width:1000px){.gb-footer-grid{grid-template-columns:repeat(2,1fr)!important}}
@@ -58,7 +58,11 @@ add_action('wp_footer', function () {
 
         var phoneLabel=phone.querySelector('.gb-footer-label');
         if(phoneLabel) phoneLabel.textContent='Telefoon';
-        Array.from(phone.querySelectorAll('a')).forEach(function(link){ link.classList.add('gb-footer-phone-link'); });
+        Array.from(phone.querySelectorAll('a')).forEach(function(link){
+          link.classList.add('gb-footer-phone-link');
+          link.style.setProperty('color','#fff','important');
+          link.style.setProperty('-webkit-text-fill-color','#fff','important');
+        });
         while(phone.firstChild){ address.appendChild(phone.firstChild); }
         phone.remove();
       }
