@@ -77,8 +77,8 @@ function gb_contact_wrap_elementor_content($content){
 add_filter('the_content','gb_contact_wrap_elementor_content',999);
 
 function gb_cars_shortcode(){
-    if (function_exists('gbv2_render_archive')) return gb_page_shell('Tweedehandswagens','Selecteerde tweedehandswagens','Een wisselend aanbod voertuigen van Garage Barnes.',gbv2_render_archive(),'Vraag naar ons aanbod','/contact/');
-    return gb_page_shell('Tweedehandswagens','Selecteerde tweedehandswagens','Een wisselend aanbod voertuigen van Garage Barnes.','<div class="gb-empty-state"><h2>Ons voertuigaanbod komt hier.</h2></div>');
+    if (function_exists('gbv2_render_archive')) return gb_page_shell('Tweedehandswagens','Geselecteerde tweedehands wagens','Een wisselend aanbod voertuigen van Garage Barnes.',gbv2_render_archive(),'Vraag naar ons aanbod','/contact/');
+    return gb_page_shell('Tweedehandswagens','Geselecteerde tweedehands wagens','Een wisselend aanbod voertuigen van Garage Barnes.','<div class="gb-empty-state"><h2>Ons voertuigaanbod komt hier.</h2></div>');
 }
 add_shortcode('garage_barnes_tweedehands','gb_cars_shortcode');
 
