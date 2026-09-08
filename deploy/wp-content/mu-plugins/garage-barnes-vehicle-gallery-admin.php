@@ -40,10 +40,12 @@ function gb_vehicle_gallery_admin_script() {
       .gb-gallery-admin-actions .button{font-size:12px;min-height:30px;line-height:28px;padding:0 8px}
       .gb-gallery-admin-remove{color:#b32d2e!important;border-color:#d63638!important}
       .gb-gallery-help{margin:12px 0 4px;padding:10px 12px;background:#f6f7f7;border-left:4px solid #5dc01d}
+      .gb-gallery-count{font-weight:700;color:#50575e}
     </style>
     <script>
     jQuery(function($){
       var frame = null;
+      var maxPhotos = 10;
       var $ids = $('#gb_gallery_ids');
       var $preview = $('#gb_gallery_preview');
       var $choose = $('#gb_gallery_choose');
@@ -51,11 +53,15 @@ function gb_vehicle_gallery_admin_script() {
       if (!$ids.length || !$choose.length) return;
 
       if (!$preview.prev('.gb-gallery-help').length) {
-        $preview.before('<div class="gb-gallery-help"><strong>Fotogalerij 4:3</strong><br>Voeg hier extra voertuigfoto\'s toe. Gebruik “Bijsnijden 4:3” als een foto handmatig moet worden uitgesneden. De vaste verhouding is 4:3.</div>');
+        $preview.before('<div class="gb-gallery-help"><strong>Fotogalerij 4:3</strong><br>Voeg hier maximaal <strong>10 extra voertuigfoto\'s</strong> toe. Je kunt in de mediabibliotheek meerdere foto\'s na elkaar aanklikken. Gebruik “Bijsnijden 4:3” als een foto handmatig moet worden uitgesneden. <span class="gb-gallery-count"></span></div>');
       }
 
       function currentIds(){
-        return String($ids.val() || '').split(',').map(function(v){return parseInt(v,10);}).filter(Boolean);
+        return String($ids.val() || '').split(',').map(function(v){return parseInt(v,10);}).filter(Boolean).slice(0,maxPhotos);
+      }
+
+      function updateCount(){
+        $('.gb-gallery-count').text('(' + currentIds().length + '/' + maxPhotos + ' geselecteerd)');
       }
 
       function cropUrl(id){
@@ -77,6 +83,7 @@ function gb_vehicle_gallery_admin_script() {
 
       function rebuildPreview(ids){
         $preview.empty();
+        updateCount();
         if (!ids.length) return;
         ids.forEach(function(id){
           var attachment = wp.media.attachment(id);
@@ -99,26 +106,37 @@ function gb_vehicle_gallery_admin_script() {
         }
 
         frame = wp.media({
-          title: 'Selecteer extra voertuigfoto\'s',
-          button: { text: 'Gebruik deze foto\'s' },
+          frame: 'select',
+          state: 'library',
+          title: 'Selecteer maximaal 10 extra voertuigfoto\'s',
+          button: { text: 'Gebruik geselecteerde foto\'s' },
           library: { type: 'image' },
-          multiple: true
+          multiple: 'add'
         });
 
         frame.on('open', function(){
           var selection = frame.state().get('selection');
+          selection.reset();
           currentIds().forEach(function(id){
             var attachment = wp.media.attachment(id);
             attachment.fetch();
             selection.add(attachment);
           });
+
+          selection.on('add', function(model){
+            if (selection.length > maxPhotos) {
+              selection.remove(model);
+              window.alert('Je kunt maximaal ' + maxPhotos + ' extra foto\'s per voertuig selecteren.');
+            }
+          });
         });
 
         frame.on('select', function(){
-          var selected = frame.state().get('selection').toJSON();
+          var selected = frame.state().get('selection').toJSON().slice(0,maxPhotos);
           var ids = selected.map(function(x){ return x.id; });
           $ids.val(ids.join(',')).trigger('change');
           $preview.html(selected.map(renderOne).join(''));
+          updateCount();
         });
 
         frame.open();
@@ -130,6 +148,7 @@ function gb_vehicle_gallery_admin_script() {
         e.preventDefault();
         $ids.val('').trigger('change');
         $preview.empty();
+        updateCount();
       });
 
       $(document).on('click', '.gb-gallery-admin-remove', function(e){
@@ -138,6 +157,7 @@ function gb_vehicle_gallery_admin_script() {
         var ids = currentIds().filter(function(id){ return id !== removeId; });
         $ids.val(ids.join(',')).trigger('change');
         $(this).closest('.gb-gallery-admin-item').remove();
+        updateCount();
       });
     });
     </script>
