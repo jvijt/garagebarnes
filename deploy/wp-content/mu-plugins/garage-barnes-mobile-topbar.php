@@ -44,7 +44,7 @@ add_action('wp_head', function () {
           white-space:nowrap;
         }
         .gb-topbar-links>a:first-child::after{
-          content:"+32 57 05 57";
+          content:"+32 52 57 05 57";
           font-size:14px;
           font-weight:400;
           letter-spacing:0;
