@@ -51,7 +51,7 @@ function gb_contact_fixed_top(){
 
 function gb_contact_cta(){
     ob_start(); ?>
-    <section class="gb-page-cta"><div class="gb-shell gb-page-cta-inner"><div><span class="gb-kicker">Garage Barnes · Hamme</span><h2>We helpen u graag verder.</h2></div><a class="gb-button gb-button-green" href="tel:+3252570557">Bel de garage</a></div></section><?php
+    <section class="gb-page-cta"><div class="gb-shell gb-page-cta-inner"><div><span class="gb-kicker">Garage Barnes · Hamme</span><h2>We helpen u graag verder.</h2></div><a class="gb-button gb-button-green" href="tel:+3252570557">Bel ons</a></div></section><?php
     return ob_get_clean();
 }
 
