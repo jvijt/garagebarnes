@@ -16,7 +16,7 @@ function gb_auto_service_hero_shortcode(){
           <h1>Uw wagen in<br>goede handen.</h1>
           <p>Onderhoud, diagnose en herstellingen voor alle merken, met duidelijke communicatie en persoonlijke service.</p>
           <div class="gb-towing-hero-actions">
-            <a class="gb-button gb-button-green" href="<?php echo esc_url(home_url('/contact/')); ?>">Maak een afspraak</a>
+            <a class="gb-button gb-button-green" href="<?php echo esc_url(home_url('/maak-afspraak/')); ?>">Maak een afspraak</a>
           </div>
         </div>
       </section>
@@ -47,7 +47,7 @@ function gb_auto_service_hero_shortcode(){
         </aside></div>
       </div></section>
 
-      <section class="gb-page-cta"><div class="gb-shell gb-page-cta-inner"><div><span class="gb-kicker">Garage Barnes · Hamme</span><h2>We helpen u graag verder.</h2></div><a class="gb-button gb-button-green" href="<?php echo esc_url(home_url('/contact/')); ?>">Maak een afspraak</a></div></section>
+      <section class="gb-page-cta"><div class="gb-shell gb-page-cta-inner"><div><span class="gb-kicker">Garage Barnes · Hamme</span><h2>We helpen u graag verder.</h2></div><a class="gb-button gb-button-green" href="<?php echo esc_url(home_url('/maak-afspraak/')); ?>">Maak een afspraak</a></div></section>
     </main>
     <?php return ob_get_clean();
 }
