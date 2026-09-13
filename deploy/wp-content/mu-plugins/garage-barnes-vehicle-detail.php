@@ -102,7 +102,7 @@ function gb_vehicle_detail_content($content) {
           </div>
 
           <a class="gb-button gb-button-green gbvd-contact" href="<?php echo esc_url(home_url('/contact/?wagen=' . rawurlencode(get_the_title($id)))); ?>">Interesse in deze wagen</a>
-          <a class="gbvd-phone" href="tel:+3252570557">Bel +32 52 57 05 57</a>
+          <a class="gbvd-phone" href="tel:+32477353547">Bel +32 477 35 35 47</a>
         </aside>
       </section>
 
