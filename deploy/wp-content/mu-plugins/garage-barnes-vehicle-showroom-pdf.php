@@ -37,7 +37,18 @@ class GB_Showroom_PDF {
 }
 
 function gb_vehicle_showroom_pdf_term($post_id,$taxonomy){if(function_exists('gbv2_term_name'))return gbv2_term_name($post_id,$taxonomy);$terms=wp_get_post_terms($post_id,$taxonomy);return(!is_wp_error($terms)&&!empty($terms))?$terms[0]->name:'';}
-function gb_vehicle_showroom_pdf_logo_jpeg(){$source=WP_PLUGIN_DIR.'/garage-barnes/assets/img/garage-barnes-logo.png';if(!is_file($source)||!function_exists('wp_get_image_editor'))return '';$editor=wp_get_image_editor($source);if(is_wp_error($editor))return '';$tmp=wp_tempnam('garage-barnes-showroom-logo.jpg');if(!$tmp)return '';$saved=$editor->save($tmp,'image/jpeg');if(is_wp_error($saved)||empty($saved['path'])||!is_file($saved['path'])){@unlink($tmp);return '';}return $saved['path'];}
+function gb_vehicle_showroom_pdf_logo_jpeg(){
+    $uploads=wp_upload_dir();
+    $source=trailingslashit($uploads['basedir']).'2026/09/Barnes-Garage-Logo-Zwart.png';
+    if(!is_file($source)||!function_exists('wp_get_image_editor'))return '';
+    $editor=wp_get_image_editor($source);
+    if(is_wp_error($editor))return '';
+    $tmp=wp_tempnam('garage-barnes-showroom-logo.jpg');
+    if(!$tmp)return '';
+    $saved=$editor->save($tmp,'image/jpeg');
+    if(is_wp_error($saved)||empty($saved['path'])||!is_file($saved['path'])){@unlink($tmp);return '';}
+    return $saved['path'];
+}
 
 function gb_vehicle_showroom_pdf_build($post_id){
     $make=gb_vehicle_showroom_pdf_term($post_id,'gb_vehicle_make');$model=gb_vehicle_showroom_pdf_term($post_id,'gb_vehicle_model');$fuel=gb_vehicle_showroom_pdf_term($post_id,'gb_vehicle_fuel');$transmission=gb_vehicle_showroom_pdf_term($post_id,'gb_vehicle_transmission');$variant=trim((string)get_post_meta($post_id,'gb_variant',true));$price_raw=(float)get_post_meta($post_id,'gb_price',true);$vat=get_post_meta($post_id,'gb_vat',true)==='btw'?'BTW aftrekbaar':'Margewagen';
