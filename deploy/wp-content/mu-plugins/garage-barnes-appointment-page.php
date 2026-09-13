@@ -17,10 +17,59 @@ add_action('init', function () {
     }
 }, 50);
 
+function gb_appointment_recaptcha_settings() {
+    $saved = get_option('garage_barnes_smtp_settings', array());
+    return array(
+        'site_key'  => isset($saved['recaptcha_site_key']) ? trim((string) $saved['recaptcha_site_key']) : '',
+        'secret'    => isset($saved['recaptcha_secret_key']) ? trim((string) $saved['recaptcha_secret_key']) : '',
+        'threshold' => isset($saved['recaptcha_threshold']) ? (float) $saved['recaptcha_threshold'] : 0.5,
+    );
+}
+
+function gb_appointment_verify_recaptcha($token) {
+    $settings = gb_appointment_recaptcha_settings();
+
+    if ($settings['site_key'] === '' || $settings['secret'] === '') {
+        return new WP_Error('recaptcha_not_configured', 'reCAPTCHA is nog niet volledig geconfigureerd.');
+    }
+    if ($token === '') {
+        return new WP_Error('recaptcha_missing', 'Spamcontrole ontbreekt. Vernieuw de pagina en probeer opnieuw.');
+    }
+
+    $response = wp_remote_post('https://www.google.com/recaptcha/api/siteverify', array(
+        'timeout' => 10,
+        'body' => array(
+            'secret'   => $settings['secret'],
+            'response' => $token,
+            'remoteip' => isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : '',
+        ),
+    ));
+
+    if (is_wp_error($response)) {
+        return new WP_Error('recaptcha_request_failed', 'Spamcontrole kon niet worden uitgevoerd. Probeer opnieuw.');
+    }
+
+    $data = json_decode(wp_remote_retrieve_body($response), true);
+    if (!is_array($data) || empty($data['success'])) {
+        return new WP_Error('recaptcha_failed', 'Spamcontrole niet geslaagd. Probeer opnieuw.');
+    }
+    if (!empty($data['action']) && $data['action'] !== 'appointment_request') {
+        return new WP_Error('recaptcha_action', 'Spamcontrole niet geslaagd.');
+    }
+
+    $score = isset($data['score']) ? (float) $data['score'] : 0;
+    if ($score < $settings['threshold']) {
+        return new WP_Error('recaptcha_score', 'Spamcontrole niet geslaagd. Probeer opnieuw.');
+    }
+
+    return true;
+}
+
 function gb_appointment_form_html() {
     $status = isset($_GET['afspraak']) ? sanitize_key(wp_unslash($_GET['afspraak'])) : '';
     $message = '';
     $message_class = '';
+    $recaptcha = gb_appointment_recaptcha_settings();
 
     if ($status === 'sent') {
         $message = 'Bedankt. Uw afspraakaanvraag is verzonden. We nemen zo snel mogelijk contact met u op.';
@@ -30,6 +79,9 @@ function gb_appointment_form_html() {
         $message_class = 'gb-appointment-error';
     } elseif ($status === 'invalid') {
         $message = 'Controleer de ingevulde gegevens. Naam, contactvoorkeur en het bijhorende e-mailadres of GSM-nummer zijn verplicht.';
+        $message_class = 'gb-appointment-error';
+    } elseif ($status === 'recaptcha') {
+        $message = 'De spamcontrole kon niet worden voltooid. Probeer opnieuw.';
         $message_class = 'gb-appointment-error';
     }
 
@@ -48,6 +100,7 @@ function gb_appointment_form_html() {
 
       <form class="gb-appointment-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post" novalidate>
         <input type="hidden" name="action" value="gb_submit_appointment_request">
+        <input type="hidden" name="recaptcha_token" value="">
         <?php wp_nonce_field('gb_appointment_request','gb_appointment_nonce'); ?>
 
         <div class="gb-appointment-field gb-appointment-field-full">
@@ -88,6 +141,7 @@ function gb_appointment_form_html() {
         </div>
 
         <button type="submit" class="gb-button gb-button-green gb-appointment-submit">Vraag afspraak</button>
+        <?php if (!empty($recaptcha['site_key'])): ?><p class="gb-appointment-recaptcha-note">Beveiligd met reCAPTCHA.</p><?php endif; ?>
       </form>
     </div>
     <?php
@@ -115,6 +169,13 @@ function gb_handle_appointment_request() {
 
     if (!empty($_POST['website'])) {
         wp_safe_redirect(add_query_arg('afspraak','sent',$redirect));
+        exit;
+    }
+
+    $recaptcha_token = isset($_POST['recaptcha_token']) ? sanitize_text_field(wp_unslash($_POST['recaptcha_token'])) : '';
+    $captcha = gb_appointment_verify_recaptcha($recaptcha_token);
+    if (is_wp_error($captcha)) {
+        wp_safe_redirect(add_query_arg('afspraak','recaptcha',$redirect));
         exit;
     }
 
@@ -179,8 +240,10 @@ add_action('wp_head', function () {
       .gb-appointment-contact-choice legend{padding:0 6px;margin-left:-6px}
       .gb-appointment-contact-choice label{display:inline-flex;align-items:center;gap:8px;margin-right:28px;font-weight:700;cursor:pointer}
       .gb-appointment-contact-choice input{accent-color:#5dc01d}
-      .gb-appointment-submit{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:100%;min-height:54px;padding:14px 24px!important;border:0!important;border-radius:3px!important;background:#5dc01d!important;color:#fff!important;font-size:17px!important;font-weight:800!important;line-height:1.2!important;text-align:center!important;text-decoration:none!important;box-shadow:none!important;cursor:pointer}
-      .gb-appointment-submit:hover,.gb-appointment-submit:focus{background:#469714!important;color:#fff!important}
+      .gb-appointment-submit{justify-self:start;width:auto!important;min-height:48px!important;padding:0 22px!important;border:0!important;border-radius:4px!important;background:var(--gb-green,#5dc01d)!important;color:#12210b!important;font-size:14px!important;font-weight:700!important;line-height:1.2!important;box-shadow:none!important;cursor:pointer}
+      .gb-appointment-submit:hover,.gb-appointment-submit:focus{background:var(--gb-green,#5dc01d)!important;color:#fff!important;filter:brightness(.94)}
+      .gb-appointment-submit[disabled]{opacity:.65;cursor:wait!important}
+      .gb-appointment-recaptcha-note{margin:-10px 0 0;color:#888;font-size:11px}
       .gb-appointment-notice{margin:0 0 25px;padding:15px 17px;border-left:4px solid;font-weight:700;line-height:1.5}
       .gb-appointment-success{background:#eef8e9;border-color:#5dc01d;color:#315a1c}
       .gb-appointment-error{background:#fff2f2;border-color:#bd2b2b;color:#7e1d1d}
@@ -192,23 +255,60 @@ add_action('wp_head', function () {
         .gb-appointment-contact-choice label{display:flex;margin:10px 0}
       }
     </style>
+    <?php
+    $recaptcha = gb_appointment_recaptcha_settings();
+    if (!empty($recaptcha['site_key'])): ?>
+      <script src="https://www.google.com/recaptcha/api.js?render=<?php echo rawurlencode($recaptcha['site_key']); ?>"></script>
+    <?php endif; ?>
     <script>
     document.addEventListener('DOMContentLoaded',function(){
       var form=document.querySelector('.gb-appointment-form');
       if(!form) return;
+      var submit=form.querySelector('.gb-appointment-submit');
+      var recaptchaSiteKey=<?php echo wp_json_encode($recaptcha['site_key']); ?>;
+      var submitting=false;
+
       form.addEventListener('submit',function(e){
+        if(submitting) return;
+        e.preventDefault();
+
         var name=form.querySelector('[name="name"]');
         var phone=form.querySelector('[name="phone"]');
         var email=form.querySelector('[name="email"]');
         var msg=form.querySelector('[name="message"]');
         var choice=form.querySelector('[name="contact_method"]:checked');
         var error='';
+
         if(!name.value.trim()) error='Vul uw naam in.';
         else if(!choice) error='Kies of u via e-mail of telefoon gecontacteerd wilt worden.';
         else if(choice.value==='email' && !email.value.trim()) error='Vul uw e-mailadres in wanneer u contact via e-mail kiest.';
         else if(choice.value==='phone' && !phone.value.trim()) error='Vul uw GSM-nummer in wanneer u contact via telefoon kiest.';
         else if(!msg.value.trim()) error='Vul kort in waarvoor u een afspraak wenst.';
-        if(error){e.preventDefault();alert(error);}
+        if(error){alert(error);return;}
+
+        if(!recaptchaSiteKey){
+          alert('reCAPTCHA is nog niet geconfigureerd. Probeer later opnieuw.');
+          return;
+        }
+        if(typeof grecaptcha==='undefined'){
+          alert('De spambeveiliging kon niet worden geladen. Probeer opnieuw.');
+          return;
+        }
+
+        submit.disabled=true;
+        submit.textContent='Even wachten…';
+
+        grecaptcha.ready(function(){
+          grecaptcha.execute(recaptchaSiteKey,{action:'appointment_request'}).then(function(token){
+            form.elements.recaptcha_token.value=token;
+            submitting=true;
+            form.submit();
+          }).catch(function(){
+            submit.disabled=false;
+            submit.textContent='Vraag afspraak';
+            alert('De spambeveiliging kon niet worden uitgevoerd. Probeer opnieuw.');
+          });
+        });
       });
     });
     </script>
