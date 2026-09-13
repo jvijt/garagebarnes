@@ -12,7 +12,7 @@ add_action('after_setup_theme', function () {
 });
 
 /**
- * Make sure the WordPress media modal is fully available on Barnes Vehicles edit screens.
+ * Make sure the WordPress media modal and sortable UI are fully available on Barnes Vehicles edit screens.
  */
 add_action('admin_enqueue_scripts', function ($hook) {
     if (!in_array($hook, array('post.php', 'post-new.php'), true)) { return; }
@@ -20,6 +20,7 @@ add_action('admin_enqueue_scripts', function ($hook) {
     if (!$screen || $screen->post_type !== 'gb_vehicle') { return; }
     wp_enqueue_media();
     wp_enqueue_script('jquery');
+    wp_enqueue_script('jquery-ui-sortable');
 }, 100);
 
 /**
@@ -33,10 +34,14 @@ function gb_vehicle_gallery_admin_script() {
     ?>
     <style id="gb-vehicle-gallery-admin-css">
       #gb_gallery_preview{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px!important;margin:16px 0!important}
-      .gb-gallery-admin-item{position:relative;border:1px solid #dcdcde;border-radius:5px;background:#fff;overflow:hidden}
-      .gb-gallery-admin-thumb{aspect-ratio:4/3;background:#f0f0f1;overflow:hidden}
+      .gb-gallery-admin-item{position:relative;border:1px solid #dcdcde;border-radius:5px;background:#fff;overflow:hidden;cursor:grab}
+      .gb-gallery-admin-item:active{cursor:grabbing}
+      .gb-gallery-admin-item.ui-sortable-helper{box-shadow:0 10px 28px rgba(0,0,0,.18);transform:rotate(1deg);z-index:9999}
+      .gb-gallery-admin-placeholder{min-height:165px;border:2px dashed #5dc01d;border-radius:5px;background:#f3faef;box-sizing:border-box}
+      .gb-gallery-admin-thumb{aspect-ratio:4/3;background:#f0f0f1;overflow:hidden;position:relative}
+      .gb-gallery-admin-thumb:before{content:'↕';position:absolute;top:7px;left:7px;z-index:2;display:flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;background:rgba(32,32,32,.78);color:#fff;font-size:15px;font-weight:700;pointer-events:none}
       .gb-gallery-admin-thumb img{display:block;width:100%!important;height:100%!important;object-fit:cover!important}
-      .gb-gallery-admin-actions{display:flex;gap:6px;justify-content:space-between;align-items:center;padding:8px}
+      .gb-gallery-admin-actions{display:flex;gap:6px;justify-content:space-between;align-items:center;padding:8px;cursor:default}
       .gb-gallery-admin-actions .button{font-size:12px;min-height:30px;line-height:28px;padding:0 8px}
       .gb-gallery-admin-remove{color:#b32d2e!important;border-color:#d63638!important}
       .gb-gallery-help{margin:12px 0 4px;padding:10px 12px;background:#f6f7f7;border-left:4px solid #5dc01d}
@@ -53,7 +58,7 @@ function gb_vehicle_gallery_admin_script() {
       if (!$ids.length || !$choose.length) return;
 
       if (!$preview.prev('.gb-gallery-help').length) {
-        $preview.before('<div class="gb-gallery-help"><strong>Fotogalerij 4:3</strong><br>Voeg hier maximaal <strong>10 extra voertuigfoto\'s</strong> toe. Je kunt in de mediabibliotheek meerdere foto\'s na elkaar aanklikken. Gebruik “Bijsnijden 4:3” als een foto handmatig moet worden uitgesneden. <span class="gb-gallery-count"></span></div>');
+        $preview.before('<div class="gb-gallery-help"><strong>Fotogalerij 4:3</strong><br>Voeg hier maximaal <strong>10 extra voertuigfoto\'s</strong> toe. <strong>Sleep de foto\'s naar de gewenste volgorde.</strong> Die volgorde wordt ook op de detailpagina van de wagen gebruikt. De uitgelichte afbeelding blijft altijd de hoofdfoto. Gebruik “Bijsnijden 4:3” als een foto handmatig moet worden uitgesneden. <span class="gb-gallery-count"></span></div>');
       }
 
       function currentIds(){
@@ -81,14 +86,51 @@ function gb_vehicle_gallery_admin_script() {
         '</div>';
       }
 
+      function syncOrderFromPreview(){
+        var ids = [];
+        $preview.children('.gb-gallery-admin-item').each(function(){
+          var id = parseInt($(this).attr('data-id'),10);
+          if (id) ids.push(id);
+        });
+        $ids.val(ids.slice(0,maxPhotos).join(',')).trigger('change');
+        updateCount();
+      }
+
+      function enableSorting(){
+        if (typeof $.fn.sortable !== 'function') return;
+        if ($preview.hasClass('ui-sortable')) { $preview.sortable('destroy'); }
+        $preview.sortable({
+          items: '.gb-gallery-admin-item',
+          tolerance: 'pointer',
+          placeholder: 'gb-gallery-admin-placeholder',
+          cancel: 'a,button,input',
+          start: function(e,ui){
+            ui.placeholder.height(ui.item.outerHeight());
+          },
+          update: function(){
+            syncOrderFromPreview();
+          }
+        });
+      }
+
       function rebuildPreview(ids){
         $preview.empty();
         updateCount();
-        if (!ids.length) return;
-        ids.forEach(function(id){
+        if (!ids.length) { enableSorting(); return; }
+
+        var remaining = ids.length;
+        var ordered = {};
+        ids.forEach(function(id, index){
           var attachment = wp.media.attachment(id);
           attachment.fetch().always(function(){
-            $preview.append(renderOne(attachment.toJSON()));
+            ordered[index] = renderOne(attachment.toJSON());
+            remaining--;
+            if (remaining === 0) {
+              var html = '';
+              ids.forEach(function(x, i){ if (ordered[i]) html += ordered[i]; });
+              $preview.html(html);
+              enableSorting();
+            }
           });
         });
       }
@@ -137,6 +179,7 @@ function gb_vehicle_gallery_admin_script() {
           $ids.val(ids.join(',')).trigger('change');
           $preview.html(selected.map(renderOne).join(''));
           updateCount();
+          enableSorting();
         });
 
         frame.open();
@@ -149,15 +192,13 @@ function gb_vehicle_gallery_admin_script() {
         $ids.val('').trigger('change');
         $preview.empty();
         updateCount();
+        enableSorting();
       });
 
       $(document).on('click', '.gb-gallery-admin-remove', function(e){
         e.preventDefault();
-        var removeId = parseInt($(this).data('id'),10);
-        var ids = currentIds().filter(function(id){ return id !== removeId; });
-        $ids.val(ids.join(',')).trigger('change');
         $(this).closest('.gb-gallery-admin-item').remove();
-        updateCount();
+        syncOrderFromPreview();
       });
     });
     </script>
