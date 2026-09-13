@@ -11,7 +11,7 @@ function gb_privacy_policy_content() {
 <p>Garage Barnes BV hecht belang aan de bescherming van uw persoonsgegevens. In dit privacy- en cookiebeleid leggen wij uit welke persoonsgegevens wij verwerken, waarom wij dat doen, met wie gegevens eventueel worden gedeeld en welke rechten u heeft. Dit beleid geldt voor onze website en voor persoonsgegevens die wij verwerken in het kader van onze activiteiten als garage en takeldienst.</p>
 
 <h2>1. Verwerkingsverantwoordelijke</h2>
-<p><strong>Garage Barnes BV</strong><br>Zonneke 4<br>9220 Hamme<br>België<br>BTW BE 0726.909.090<br>E-mail: <a href="mailto:info@garagebarnes.com">info@garagebarnes.com</a><br>Telefoon: <a href="tel:+3252570557">+32 52 57 05 57</a></p>
+<p><strong>Garage Barnes BV</strong><br>Zonneke 4<br>9220 Hamme<br>België<br>BTW BE 0726.909.090<br>E-mail: <a href="mailto:info@garagebarnes.com">info@garagebarnes.com</a><br>Telefoon: <a href="tel:+32477353547">+32 477 35 35 47</a></p>
 <p>Garage Barnes BV is de verwerkingsverantwoordelijke voor de persoonsgegevens die in het kader van haar activiteiten worden verwerkt.</p>
 
 <h2>2. Welke persoonsgegevens verwerken wij?</h2>
@@ -79,6 +79,10 @@ add_action('init', function () {
         }
     } else {
         update_option('wp_page_for_privacy_policy', (int) $page->ID);
+        if (!get_option('gb_privacy_phone_migrated_v1') && strpos((string) $page->post_content, '+32 52 57 05 57') !== false) {
+            wp_update_post(array('ID' => $page->ID, 'post_content' => str_replace(array('+32 52 57 05 57', 'tel:+3252570557'), array('+32 477 35 35 47', 'tel:+32477353547'), (string) $page->post_content)));
+            update_option('gb_privacy_phone_migrated_v1', 1, false);
+        }
     }
 }, 45);
 
