@@ -75,8 +75,9 @@ add_action('wp_footer', function () {
       .gbvi-status{display:none;margin:0 0 15px;padding:11px 13px;border-radius:6px;font-size:14px;line-height:1.45}
       .gbvi-status.is-error{display:block;background:#fff0f0;color:#9c2424}
       .gbvi-status.is-success{display:block;background:#edf8e8;color:#2f6f16}
-      .gbvi-submit{width:100%;border:0;cursor:pointer}
-      .gbvi-submit[disabled]{opacity:.65;cursor:wait}
+      .gbvi-modal-dialog .gbvi-submit,.gbvi-modal-dialog button.gbvi-submit{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-height:50px!important;padding:13px 24px!important;border:0!important;border-radius:3px!important;background:var(--gb-green,#5dc01d)!important;color:#fff!important;font-weight:800!important;line-height:1.2!important;text-align:center!important;text-decoration:none!important;cursor:pointer!important;box-shadow:none!important}
+      .gbvi-modal-dialog .gbvi-submit:hover,.gbvi-modal-dialog .gbvi-submit:focus{background:#469714!important;color:#fff!important}
+      .gbvi-submit[disabled]{opacity:.65;cursor:wait!important}
       .gbvi-hp{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
       body.gbvi-modal-open{overflow:hidden}
       @media(max-width:620px){.gbvi-modal{padding:14px}.gbvi-modal-dialog{padding:27px 20px}.gbvi-modal-dialog h2{font-size:25px}.gbvi-contact-grid{grid-template-columns:1fr;gap:0}}
