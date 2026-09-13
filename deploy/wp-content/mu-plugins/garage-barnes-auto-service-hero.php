@@ -62,6 +62,44 @@ function gb_auto_service_hero_shortcode(){
         </aside></div>
       </div></section>
 
+      <section class="gb-auto-service-highlight-cta">
+        <div class="gb-shell">
+          <div class="gb-auto-service-highlight-inner">
+            <div>
+              <span class="gb-kicker">Garage Barnes · Hamme</span>
+              <h2>Tijd voor onderhoud of een herstelling?</h2>
+              <p>Plan eenvoudig uw afspraak. We nemen uw wagen professioneel onder handen en houden u duidelijk op de hoogte.</p>
+            </div>
+            <a class="gb-button gb-auto-service-big-button" href="<?php echo esc_url(home_url('/maak-afspraak/')); ?>">Maak een afspraak</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="gb-auto-service-video-section">
+        <div class="gb-shell">
+          <div class="gb-auto-service-section-heading">
+            <span class="gb-kicker">Garage Barnes in beeld</span>
+            <h2>Bekijk onze garage</h2>
+          </div>
+          <div class="gb-auto-service-video-wrap">
+            <iframe src="https://www.youtube-nocookie.com/embed/J_81lK_xmek?rel=0" title="Garage Barnes Auto Service" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+        </div>
+      </section>
+
+      <section class="gb-auto-service-gallery-section">
+        <div class="gb-shell">
+          <div class="gb-auto-service-section-heading">
+            <span class="gb-kicker">Onze werkplaats</span>
+            <h2>Foto's van Garage Barnes</h2>
+            <p>Hier komt binnenkort een fotogalerij met beelden van onze werkplaats, techniekers en uitgevoerde werken.</p>
+          </div>
+          <div class="gb-auto-service-gallery-placeholder" aria-label="Fotogalerij wordt binnenkort toegevoegd">
+            <span>Fotogalerij binnenkort beschikbaar</span>
+          </div>
+        </div>
+      </section>
+
       <section class="gb-page-cta"><div class="gb-shell gb-page-cta-inner"><div><span class="gb-kicker">Garage Barnes · Hamme</span><h2>We helpen u graag verder.</h2></div><a class="gb-button gb-button-green" href="<?php echo esc_url(home_url('/maak-afspraak/')); ?>">Maak een afspraak</a></div></section>
     </main>
     <?php return ob_get_clean();
@@ -95,6 +133,30 @@ add_action('wp_head', function(){
       .gb-auto-service-page .gb-auto-partner h3{margin:0 0 12px!important;font-size:22px!important;line-height:1.2!important;text-align:center!important}
       .gb-auto-service-page .gb-auto-partner-123 p{text-align:left!important}
       .gb-auto-partner-last h3{margin-bottom:0!important}
+
+      .gb-auto-service-highlight-cta{padding:26px 0 70px;background:#fff}
+      .gb-auto-service-highlight-inner{display:flex;align-items:center;justify-content:space-between;gap:40px;padding:42px 46px;background:#111;color:#fff;border-left:7px solid #5dc01d;box-shadow:0 18px 46px rgba(0,0,0,.14)}
+      .gb-auto-service-highlight-inner .gb-kicker{color:#a6ec79}
+      .gb-auto-service-highlight-inner h2{margin:5px 0 8px!important;color:#fff!important;font-size:clamp(30px,4vw,44px)!important;line-height:1.08!important}
+      .gb-auto-service-highlight-inner p{max-width:650px;margin:0;color:#d7d7d7;font-size:17px;line-height:1.55}
+      .gb-auto-service-big-button{display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto;min-width:245px;min-height:60px;padding:17px 28px!important;background:#5dc01d!important;color:#fff!important;border-radius:3px!important;font-size:18px!important;font-weight:800!important;text-decoration:none!important}
+      .gb-auto-service-big-button:hover{background:#469714!important;color:#fff!important}
+
+      .gb-auto-service-video-section{padding:75px 0;background:#f4f5f2}
+      .gb-auto-service-section-heading{max-width:760px;margin:0 auto 30px;text-align:center}
+      .gb-auto-service-section-heading .gb-kicker{color:#469714}
+      .gb-auto-service-section-heading h2{margin:5px 0 12px!important;font-size:clamp(32px,4vw,46px)!important;line-height:1.1!important}
+      .gb-auto-service-section-heading p{margin:0;color:#676d64;font-size:16px;line-height:1.6}
+      .gb-auto-service-video-wrap{position:relative;max-width:1000px;margin:0 auto;aspect-ratio:16/9;background:#111;border-radius:8px;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.14)}
+      .gb-auto-service-video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+      .gb-auto-service-gallery-section{padding:75px 0;background:#fff}
+      .gb-auto-service-gallery-placeholder{display:flex;align-items:center;justify-content:center;min-height:210px;max-width:1000px;margin:0 auto;border:2px dashed #cbd2c5;border-radius:8px;background:#f7f8f5;color:#71776d;font-size:16px;font-weight:700;text-align:center;padding:30px}
+
+      @media(max-width:800px){
+        .gb-auto-service-highlight-inner{flex-direction:column;align-items:flex-start;padding:34px 28px}
+        .gb-auto-service-big-button{width:100%;min-width:0}
+      }
       @media(max-width:700px){
         .gb-auto-service-hero{min-height:560px;background-position:58% center}
         .gb-auto-service-hero-inner{padding-top:70px;padding-bottom:70px}
@@ -102,6 +164,8 @@ add_action('wp_head', function(){
         .gb-auto-partner{padding:26px 24px}
         .gb-auto-service-page .gb-auto-partner .gb-page-network-logo,.gb-auto-service-page .gb-auto-partner-logo{max-width:190px!important}
         .gb-auto-service-page .gb-auto-partner-logo-eurol{max-width:250px!important;max-height:130px!important}
+        .gb-auto-service-highlight-cta{padding:15px 0 55px}
+        .gb-auto-service-video-section,.gb-auto-service-gallery-section{padding:58px 0}
       }
     </style>
     <?php
