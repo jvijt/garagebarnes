@@ -1,0 +1,307 @@
+<?php
+/**
+ * Garage Barnes - one-page showroom PDF for Barnes Vehicles.
+ */
+if (!defined('ABSPATH')) { exit; }
+
+add_action('add_meta_boxes_gb_vehicle', function(){
+    add_meta_box(
+        'gb_vehicle_showroom_pdf',
+        'Showroomfiche PDF',
+        'gb_vehicle_showroom_pdf_metabox',
+        'gb_vehicle',
+        'side',
+        'high'
+    );
+});
+
+function gb_vehicle_showroom_pdf_metabox($post){
+    if (!$post || empty($post->ID)) { return; }
+    $url = wp_nonce_url(
+        admin_url('admin-post.php?action=gb_vehicle_showroom_pdf&post_id=' . absint($post->ID)),
+        'gb_vehicle_showroom_pdf_' . absint($post->ID)
+    );
+    echo '<p>Download een A4-showroomfiche met prijs, voertuiggegevens en alle opties.</p>';
+    echo '<p><a class="button button-primary button-large" style="width:100%;text-align:center" href="' . esc_url($url) . '">PDF showroomfiche downloaden</a></p>';
+    echo '<p class="description">Sla wijzigingen aan de wagen eerst op. De PDF gebruikt de laatst opgeslagen gegevens.</p>';
+}
+
+add_filter('post_row_actions', function($actions, $post){
+    if (!$post || $post->post_type !== 'gb_vehicle' || !current_user_can('edit_post', $post->ID)) { return $actions; }
+    $url = wp_nonce_url(
+        admin_url('admin-post.php?action=gb_vehicle_showroom_pdf&post_id=' . absint($post->ID)),
+        'gb_vehicle_showroom_pdf_' . absint($post->ID)
+    );
+    $actions['gb_showroom_pdf'] = '<a href="' . esc_url($url) . '">Showroom PDF</a>';
+    return $actions;
+}, 10, 2);
+
+class GB_Showroom_PDF {
+    private $commands = array();
+    private $image = null;
+    private $page_w = 595.28;
+    private $page_h = 841.89;
+
+    public function rgb($hex){
+        $hex = ltrim((string) $hex, '#');
+        if (strlen($hex) !== 6) { return array(0,0,0); }
+        return array(hexdec(substr($hex,0,2))/255, hexdec(substr($hex,2,2))/255, hexdec(substr($hex,4,2))/255);
+    }
+
+    private function enc($text){
+        $text = html_entity_decode(wp_strip_all_tags((string) $text), ENT_QUOTES, 'UTF-8');
+        $converted = function_exists('iconv') ? @iconv('UTF-8', 'Windows-1252//TRANSLIT', $text) : $text;
+        if ($converted === false) { $converted = preg_replace('/[^\x20-\x7E]/', '', $text); }
+        return str_replace(array('\\','(',')',"\r","\n"), array('\\\\','\\(','\\)',' ',' '), $converted);
+    }
+
+    private function width($text, $size, $bold=false){
+        $raw = $this->enc($text);
+        $factor = $bold ? 0.56 : 0.51;
+        return strlen($raw) * (float) $size * $factor;
+    }
+
+    public function text($x,$y,$size,$text,$bold=false,$hex='#202020',$align='left'){
+        $rgb = $this->rgb($hex);
+        $w = $this->width($text,$size,$bold);
+        if ($align === 'right') { $x -= $w; }
+        elseif ($align === 'center') { $x -= $w/2; }
+        $font = $bold ? 'F2' : 'F1';
+        $this->commands[] = sprintf('BT /%s %.2F Tf %.4F %.4F %.4F rg %.2F %.2F Td (%s) Tj ET', $font, $size, $rgb[0], $rgb[1], $rgb[2], $x, $y, $this->enc($text));
+    }
+
+    public function line($x1,$y1,$x2,$y2,$hex='#dfe3dc',$width=1){
+        $rgb = $this->rgb($hex);
+        $this->commands[] = sprintf('%.4F %.4F %.4F RG %.2F w %.2F %.2F m %.2F %.2F l S', $rgb[0],$rgb[1],$rgb[2],$width,$x1,$y1,$x2,$y2);
+    }
+
+    public function rect($x,$y,$w,$h,$hex='#ffffff',$stroke=null,$stroke_width=1){
+        $fill = $this->rgb($hex);
+        $cmd = sprintf('%.4F %.4F %.4F rg %.2F %.2F %.2F %.2F re f', $fill[0],$fill[1],$fill[2],$x,$y,$w,$h);
+        $this->commands[] = $cmd;
+        if ($stroke) {
+            $s = $this->rgb($stroke);
+            $this->commands[] = sprintf('%.4F %.4F %.4F RG %.2F w %.2F %.2F %.2F %.2F re S', $s[0],$s[1],$s[2],$stroke_width,$x,$y,$w,$h);
+        }
+    }
+
+    public function truncate($text,$size,$max_width,$bold=false){
+        $text = trim((string) $text);
+        if ($this->width($text,$size,$bold) <= $max_width) { return $text; }
+        $ellipsis = '...';
+        while ($text !== '' && $this->width($text . $ellipsis,$size,$bold) > $max_width) {
+            $text = function_exists('mb_substr') ? mb_substr($text,0,-1,'UTF-8') : substr($text,0,-1);
+        }
+        return rtrim($text) . $ellipsis;
+    }
+
+    public function add_jpeg($path,$x,$y,$max_w,$max_h){
+        if (!$path || !is_file($path)) { return false; }
+        $info = @getimagesize($path);
+        if (!$info || empty($info[0]) || empty($info[1]) || $info[2] !== IMAGETYPE_JPEG) { return false; }
+        $data = @file_get_contents($path);
+        if ($data === false) { return false; }
+        $ratio = min($max_w/$info[0], $max_h/$info[1]);
+        $w = $info[0] * $ratio;
+        $h = $info[1] * $ratio;
+        $this->image = array('data'=>$data,'px_w'=>$info[0],'px_h'=>$info[1],'x'=>$x,'y'=>$y,'w'=>$w,'h'=>$h);
+        return true;
+    }
+
+    public function output(){
+        if ($this->image) {
+            $i = $this->image;
+            $this->commands[] = sprintf('q %.2F 0 0 %.2F %.2F %.2F cm /Im1 Do Q', $i['w'],$i['h'],$i['x'],$i['y']);
+        }
+        $stream = implode("\n", $this->commands) . "\n";
+        $has_image = (bool) $this->image;
+        $content_obj = $has_image ? 7 : 6;
+        $objects = array();
+        $objects[1] = '<< /Type /Catalog /Pages 2 0 R >>';
+        $objects[2] = '<< /Type /Pages /Kids [3 0 R] /Count 1 >>';
+        $resources = '<< /Font << /F1 4 0 R /F2 5 0 R >>' . ($has_image ? ' /XObject << /Im1 6 0 R >>' : '') . ' >>';
+        $objects[3] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' . $this->page_w . ' ' . $this->page_h . '] /Resources ' . $resources . ' /Contents ' . $content_obj . ' 0 R >>';
+        $objects[4] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
+        $objects[5] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
+        if ($has_image) {
+            $i = $this->image;
+            $objects[6] = '<< /Type /XObject /Subtype /Image /Width ' . intval($i['px_w']) . ' /Height ' . intval($i['px_h']) . ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' . strlen($i['data']) . " >>\nstream\n" . $i['data'] . "\nendstream";
+        }
+        $objects[$content_obj] = '<< /Length ' . strlen($stream) . " >>\nstream\n" . $stream . 'endstream';
+
+        ksort($objects);
+        $pdf = "%PDF-1.4\n%\xE2\xE3\xCF\xD3\n";
+        $offsets = array(0=>0);
+        foreach ($objects as $num=>$obj) {
+            $offsets[$num] = strlen($pdf);
+            $pdf .= $num . " 0 obj\n" . $obj . "\nendobj\n";
+        }
+        $xref = strlen($pdf);
+        $max = max(array_keys($objects));
+        $pdf .= "xref\n0 " . ($max+1) . "\n0000000000 65535 f \n";
+        for ($n=1;$n<=$max;$n++) {
+            $pdf .= sprintf("%010d 00000 n \n", isset($offsets[$n]) ? $offsets[$n] : 0);
+        }
+        $pdf .= "trailer\n<< /Size " . ($max+1) . " /Root 1 0 R >>\nstartxref\n" . $xref . "\n%%EOF";
+        return $pdf;
+    }
+}
+
+function gb_vehicle_showroom_pdf_term($post_id,$taxonomy){
+    if (function_exists('gbv2_term_name')) { return gbv2_term_name($post_id,$taxonomy); }
+    $terms = wp_get_post_terms($post_id,$taxonomy);
+    return (!is_wp_error($terms) && !empty($terms)) ? $terms[0]->name : '';
+}
+
+function gb_vehicle_showroom_pdf_logo_jpeg(){
+    $source = WP_PLUGIN_DIR . '/garage-barnes/assets/img/garage-barnes-logo.png';
+    if (!is_file($source) || !function_exists('wp_get_image_editor')) { return ''; }
+    $editor = wp_get_image_editor($source);
+    if (is_wp_error($editor)) { return ''; }
+    $tmp = wp_tempnam('garage-barnes-showroom-logo.jpg');
+    if (!$tmp) { return ''; }
+    $saved = $editor->save($tmp, 'image/jpeg');
+    if (is_wp_error($saved) || empty($saved['path']) || !is_file($saved['path'])) {
+        @unlink($tmp);
+        return '';
+    }
+    return $saved['path'];
+}
+
+function gb_vehicle_showroom_pdf_build($post_id){
+    $make = gb_vehicle_showroom_pdf_term($post_id,'gb_vehicle_make');
+    $model = gb_vehicle_showroom_pdf_term($post_id,'gb_vehicle_model');
+    $fuel = gb_vehicle_showroom_pdf_term($post_id,'gb_vehicle_fuel');
+    $transmission = gb_vehicle_showroom_pdf_term($post_id,'gb_vehicle_transmission');
+    $variant = trim((string) get_post_meta($post_id,'gb_variant',true));
+    $price_raw = (float) get_post_meta($post_id,'gb_price',true);
+    $vat = get_post_meta($post_id,'gb_vat',true) === 'btw' ? 'BTW aftrekbaar' : 'Margewagen';
+    $price = $price_raw > 0 ? 'EUR ' . number_format($price_raw,0,',','.') : 'Prijs op aanvraag';
+
+    $specs = array(
+        'Bouwjaar' => get_post_meta($post_id,'gb_year',true),
+        'Eerste inschrijving' => get_post_meta($post_id,'gb_first_registration',true),
+        'Kilometerstand' => get_post_meta($post_id,'gb_mileage',true) !== '' ? number_format((int)get_post_meta($post_id,'gb_mileage',true),0,',','.') . ' km' : '',
+        'Brandstof' => $fuel,
+        'Transmissie' => $transmission,
+        'Vermogen' => get_post_meta($post_id,'gb_power_hp',true) !== '' ? get_post_meta($post_id,'gb_power_hp',true) . ' pk' : '',
+        'Cilinderinhoud' => get_post_meta($post_id,'gb_displacement',true) !== '' ? number_format((int)get_post_meta($post_id,'gb_displacement',true),0,',','.') . ' cc' : '',
+        'Kleur' => get_post_meta($post_id,'gb_color',true),
+        'CO2-uitstoot' => get_post_meta($post_id,'gb_co2',true) !== '' ? get_post_meta($post_id,'gb_co2',true) . ' g/km' : '',
+        'Deuren' => get_post_meta($post_id,'gb_doors',true),
+        'Zitplaatsen' => get_post_meta($post_id,'gb_seats',true),
+        'Garantie' => get_post_meta($post_id,'gb_warranty',true),
+    );
+    $specs = array_filter($specs, function($v){ return $v !== '' && $v !== null; });
+
+    $options_raw = (string) get_post_meta($post_id,'gb_options',true);
+    $options = array_values(array_filter(array_map('trim', preg_split('/\R/', $options_raw))));
+
+    $pdf = new GB_Showroom_PDF();
+    $green = '#5dc01d';
+    $dark = '#202020';
+    $muted = '#6d746a';
+    $line = '#dfe3dc';
+    $light = '#f4f5f2';
+
+    $pdf->rect(0,0,595.28,841.89,'#ffffff');
+    $pdf->rect(0,821.5,595.28,20.39,$green);
+
+    $logo_tmp = gb_vehicle_showroom_pdf_logo_jpeg();
+    $logo_ok = false;
+    if ($logo_tmp) { $logo_ok = $pdf->add_jpeg($logo_tmp,36,754,124,46); }
+    if (!$logo_ok) {
+        $pdf->text(36,778,16,'GARAGE BARNES',true,$dark);
+        $pdf->text(36,762,8,'GARAGE & TAKELDIENST',true,$green);
+    }
+
+    $title = trim($make . ' ' . $model);
+    $title_size = 32;
+    if (strlen($title) > 26) { $title_size = 27; }
+    if (strlen($title) > 34) { $title_size = 23; }
+    $pdf->text(36,716,$title_size,$title,true,$dark);
+    if ($variant !== '') { $pdf->text(36,694,13,$pdf->truncate($variant,13,320,false),false,$muted); }
+
+    $pdf->text(559,716,32,$price,true,$dark,'right');
+    $pdf->text(559,694,10,$vat,true,$green,'right');
+    $pdf->line(36,674,559,674,$green,3);
+
+    $pdf->text(36,647,11,'VOERTUIGGEGEVENS',true,$green);
+
+    $spec_items = array();
+    foreach ($specs as $label=>$value) { $spec_items[] = array($label,(string)$value); }
+    $spec_cols = 3;
+    $spec_w = (523 - 16) / 3;
+    $spec_row_h = 48;
+    $spec_rows = max(1, (int) ceil(count($spec_items)/$spec_cols));
+    $spec_top = 629;
+    foreach ($spec_items as $idx=>$item) {
+        $col = $idx % $spec_cols;
+        $row = (int) floor($idx / $spec_cols);
+        $x = 36 + $col * ($spec_w + 8);
+        $y = $spec_top - ($row+1)*$spec_row_h;
+        $pdf->rect($x,$y,$spec_w,$spec_row_h-8,$light,$line,.5);
+        $pdf->text($x+10,$y+25,7.4,strtoupper($item[0]),true,$muted);
+        $pdf->text($x+10,$y+10,11,$pdf->truncate($item[1],11,$spec_w-20,true),true,$dark);
+    }
+
+    $after_specs = $spec_top - $spec_rows*$spec_row_h - 16;
+    $pdf->text(36,$after_specs,11,'OPTIES & UITRUSTING',true,$green);
+    $options_top = $after_specs - 18;
+    $footer_top = 56;
+    $available_h = max(90, $options_top - $footer_top);
+
+    if (empty($options)) {
+        $pdf->text(36,$options_top-20,10,'Geen extra opties opgegeven.',false,$muted);
+    } else {
+        $count = count($options);
+        $cols = $count <= 24 ? 3 : 4;
+        $gap = 10;
+        $col_w = (523 - ($cols-1)*$gap) / $cols;
+        $rows = (int) ceil($count/$cols);
+        $font = 9.4;
+        $line_h = 15.2;
+        if ($rows*$line_h > $available_h) {
+            $line_h = max(9.0, $available_h / max(1,$rows));
+            $font = max(6.4, min(9.2, $line_h - 3.2));
+        }
+        foreach ($options as $idx=>$option) {
+            $col = (int) floor($idx/$rows);
+            $row = $idx % $rows;
+            if ($col >= $cols) { break; }
+            $x = 36 + $col*($col_w+$gap);
+            $y = $options_top - 12 - $row*$line_h;
+            if ($y < $footer_top) { continue; }
+            $pdf->text($x,$y,$font,'•',true,$green);
+            $pdf->text($x+10,$y,$font,$pdf->truncate($option,$font,$col_w-10,false),false,$dark);
+        }
+    }
+
+    $pdf->line(36,43,559,43,$line,.8);
+    $pdf->text(36,27,8.4,'Garage Barnes BV - Zonneke 4 - 9220 Hamme',false,$muted);
+    $pdf->text(559,27,8.4,'garagebarnes.com  |  +32 477 35 35 47',false,$muted,'right');
+
+    $bytes = $pdf->output();
+    if ($logo_tmp && is_file($logo_tmp)) { @unlink($logo_tmp); }
+    return $bytes;
+}
+
+add_action('admin_post_gb_vehicle_showroom_pdf', function(){
+    $post_id = isset($_GET['post_id']) ? absint($_GET['post_id']) : 0;
+    if (!$post_id || get_post_type($post_id) !== 'gb_vehicle') { wp_die('Ongeldige wagen.'); }
+    if (!current_user_can('edit_post',$post_id)) { wp_die('Geen toegang.'); }
+    check_admin_referer('gb_vehicle_showroom_pdf_' . $post_id);
+
+    $make = gb_vehicle_showroom_pdf_term($post_id,'gb_vehicle_make');
+    $model = gb_vehicle_showroom_pdf_term($post_id,'gb_vehicle_model');
+    $filename = sanitize_file_name('Garage-Barnes-' . trim($make . '-' . $model) . '.pdf');
+    if (!$filename || $filename === '.pdf') { $filename = 'Garage-Barnes-showroomfiche.pdf'; }
+
+    $pdf = gb_vehicle_showroom_pdf_build($post_id);
+    nocache_headers();
+    header('Content-Type: application/pdf');
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+    header('Content-Length: ' . strlen($pdf));
+    echo $pdf;
+    exit;
+});
