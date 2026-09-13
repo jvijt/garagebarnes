@@ -48,7 +48,7 @@ add_action('init','gb_bootstrap_site_pages');
 
 function gb_render_global_header() {
     if (is_admin()) return;
-    $home=home_url('/'); $garage=home_url('/auto-service/'); $towing=home_url('/takeldienst/'); $cars=home_url('/tweedehands/'); $about=home_url('/over-ons/'); $contact=home_url('/contact/');
+    $home=home_url('/'); $garage=home_url('/auto-service/'); $towing=home_url('/takeldienst/'); $cars=home_url('/tweedehands/'); $about=home_url('/over-ons/'); $contact=home_url('/contact/'); $appointment=home_url('/maak-afspraak/');
     $garage_logo = GB_PLUGIN_URL . 'assets/img/garage-barnes-logo.png';
     $towing_logo = GB_PLUGIN_URL . 'assets/img/takeldienst-barnes-logo.png';
     ?>
@@ -56,7 +56,7 @@ function gb_render_global_header() {
     <header class="gb-site-header"><div class="gb-shell gb-header-inner">
         <a class="gb-logo-link gb-garage-logo-link" href="<?php echo esc_url($home); ?>" aria-label="Garage Barnes home"><img class="gb-garage-logo" src="<?php echo esc_url($garage_logo); ?>" alt="Garage Barnes"></a>
         <nav class="gb-main-nav" aria-label="Hoofdnavigatie"><a href="<?php echo esc_url($home); ?>">Home</a><a href="<?php echo esc_url($garage); ?>">Auto Service</a><a href="<?php echo esc_url($towing); ?>">Takeldienst</a><a href="<?php echo esc_url($cars); ?>">Tweedehands</a><a href="<?php echo esc_url($about); ?>">Over ons</a><a href="<?php echo esc_url($contact); ?>">Contact</a></nav>
-        <div class="gb-header-actions"><a class="gb-logo-link gb-towing-logo-link" href="<?php echo esc_url($towing); ?>" aria-label="Takeldienst Barnes 24/7"><img class="gb-towing-logo" src="<?php echo esc_url($towing_logo); ?>" alt="Takeldienst Barnes 24/7"></a><a class="gb-button gb-button-green" href="<?php echo esc_url($contact); ?>">Afspraak maken</a></div>
+        <div class="gb-header-actions"><a class="gb-logo-link gb-towing-logo-link" href="<?php echo esc_url($towing); ?>" aria-label="Takeldienst Barnes 24/7"><img class="gb-towing-logo" src="<?php echo esc_url($towing_logo); ?>" alt="Takeldienst Barnes 24/7"></a><a class="gb-button gb-button-green" href="<?php echo esc_url($appointment); ?>">Afspraak maken</a></div>
     </div></header>
     <?php
 }
