@@ -5,11 +5,14 @@
 if (!defined('ABSPATH')) { exit; }
 
 function gb_new_logo_urls() {
+    $uploads = wp_upload_dir();
+    $base = !empty($uploads['baseurl']) ? trailingslashit($uploads['baseurl']) . '2026/09/' : trailingslashit(home_url('/wp-content/uploads/2026/09/'));
+
     return array(
-        'garage_black' => 'https://garagebarnes.be/wp-content/uploads/2026/09/Barnes-Garage-Logo-Zwart.png',
-        'garage_white' => 'https://garagebarnes.be/wp-content/uploads/2026/09/Barnes-Garage-Logo-Wit.png',
-        'towing_black' => 'https://garagebarnes.be/wp-content/uploads/2026/09/Barnes-Takeldienst-Logo-Zwart.png',
-        'towing_white' => 'https://garagebarnes.be/wp-content/uploads/2026/09/Barnes-Takeldienst-Logo-Wit.png',
+        'garage_black' => $base . 'Barnes-Garage-Logo-Zwart.png',
+        'garage_white' => $base . 'Barnes-Garage-Logo-Wit.png',
+        'towing_black' => $base . 'Barnes-Takeldienst-Logo-Zwart.png',
+        'towing_white' => $base . 'Barnes-Takeldienst-Logo-Wit.png',
     );
 }
 
