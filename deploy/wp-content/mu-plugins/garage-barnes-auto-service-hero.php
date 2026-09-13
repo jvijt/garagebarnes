@@ -48,7 +48,6 @@ function gb_auto_service_hero_shortcode(){
             </a>
             <h3>Persoonlijke garageservice</h3>
             <p>Een lokaal aanspreekpunt met technische kennis, snelle service en transparante communicatie.</p>
-            <a href="tel:+32477353547">+32 477 35 35 47</a>
           </div>
 
           <div class="gb-auto-partner">
@@ -87,23 +86,22 @@ add_action('wp_head', function(){
       .gb-auto-partner{padding:30px 28px}
       .gb-auto-partner+.gb-auto-partner{border-top:1px solid #dfe3dc}
       .gb-auto-partner-123{padding-top:28px}
-      .gb-auto-partner-logo-link{display:block;text-align:center;text-decoration:none!important}
-      .gb-auto-partner-logo-link:hover{opacity:.88}
-      .gb-auto-partner .gb-page-network-logo{display:block;max-width:210px;width:100%;height:auto;margin:0 auto 24px}
-      .gb-auto-partner-logo{display:block;max-width:210px;max-height:105px;width:auto;height:auto;object-fit:contain;margin:0 auto 22px}
-      .gb-auto-partner-logo-eurol{max-width:255px;max-height:122px}
-      .gb-auto-partner-logo-xten{max-height:90px}
-      .gb-auto-partner h3{margin:0 0 12px;font-size:22px;line-height:1.2;text-align:center}
-      .gb-auto-partner-123 p{text-align:left}
-      .gb-auto-partner-123>a[href^="tel:"]{display:block;text-align:left}
-      .gb-auto-partner-last h3{margin-bottom:0}
+      .gb-auto-service-page .gb-auto-partner-logo-link{display:block!important;text-align:center!important;text-decoration:none!important}
+      .gb-auto-service-page .gb-auto-partner-logo-link:hover{opacity:.88}
+      .gb-auto-service-page .gb-auto-partner .gb-page-network-logo{display:block!important;max-width:210px!important;width:100%!important;height:auto!important;margin:0 auto 24px!important}
+      .gb-auto-service-page .gb-auto-partner-logo{display:block!important;max-width:210px!important;max-height:105px!important;width:auto!important;height:auto!important;object-fit:contain!important;margin:0 auto 22px!important}
+      .gb-auto-service-page .gb-auto-partner-logo-eurol{max-width:285px!important;max-height:145px!important;width:100%!important}
+      .gb-auto-service-page .gb-auto-partner-logo-xten{max-height:90px!important}
+      .gb-auto-service-page .gb-auto-partner h3{margin:0 0 12px!important;font-size:22px!important;line-height:1.2!important;text-align:center!important}
+      .gb-auto-service-page .gb-auto-partner-123 p{text-align:left!important}
+      .gb-auto-partner-last h3{margin-bottom:0!important}
       @media(max-width:700px){
         .gb-auto-service-hero{min-height:560px;background-position:58% center}
         .gb-auto-service-hero-inner{padding-top:70px;padding-bottom:70px}
         .gb-auto-service-hero h1{font-size:48px}
         .gb-auto-partner{padding:26px 24px}
-        .gb-auto-partner .gb-page-network-logo,.gb-auto-partner-logo{max-width:190px}
-        .gb-auto-partner-logo-eurol{max-width:225px;max-height:112px}
+        .gb-auto-service-page .gb-auto-partner .gb-page-network-logo,.gb-auto-service-page .gb-auto-partner-logo{max-width:190px!important}
+        .gb-auto-service-page .gb-auto-partner-logo-eurol{max-width:250px!important;max-height:130px!important}
       }
     </style>
     <?php
