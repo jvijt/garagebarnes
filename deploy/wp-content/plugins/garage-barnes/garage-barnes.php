@@ -52,7 +52,7 @@ function gb_render_global_header() {
     $garage_logo = GB_PLUGIN_URL . 'assets/img/garage-barnes-logo.png';
     $towing_logo = GB_PLUGIN_URL . 'assets/img/takeldienst-barnes-logo.png';
     ?>
-    <div class="gb-topbar"><div class="gb-shell gb-topbar-inner"><div>Zonneke 4 · 9220 Hamme</div><div class="gb-topbar-links"><a href="tel:+3252570557">+32 52 57 05 57</a><a class="gb-topbar-towing" href="<?php echo esc_url($towing); ?>">Takeldienst 24/7</a></div></div></div>
+    <div class="gb-topbar"><div class="gb-shell gb-topbar-inner"><div>Zonneke 4 · 9220 Hamme</div><div class="gb-topbar-links"><a href="tel:+32477353547">+32 477 35 35 47</a><a class="gb-topbar-towing" href="<?php echo esc_url($towing); ?>">Takeldienst 24/7</a></div></div></div>
     <header class="gb-site-header"><div class="gb-shell gb-header-inner">
         <a class="gb-logo-link gb-garage-logo-link" href="<?php echo esc_url($home); ?>" aria-label="Garage Barnes home"><img class="gb-garage-logo" src="<?php echo esc_url($garage_logo); ?>" alt="Garage Barnes"></a>
         <nav class="gb-main-nav" aria-label="Hoofdnavigatie"><a href="<?php echo esc_url($home); ?>">Home</a><a href="<?php echo esc_url($garage); ?>">Auto Service</a><a href="<?php echo esc_url($towing); ?>">Takeldienst</a><a href="<?php echo esc_url($cars); ?>">Tweedehands</a><a href="<?php echo esc_url($about); ?>">Over ons</a><a href="<?php echo esc_url($contact); ?>">Contact</a></nav>
@@ -71,7 +71,7 @@ function gb_render_global_footer() {
     <footer class="gb-site-footer"><div class="gb-shell gb-footer-grid">
         <div class="gb-footer-brand"><img class="gb-footer-garage-logo" src="<?php echo esc_url($garage_logo); ?>" alt="Garage Barnes"><p>Garage, onderhoud, herstellingen, tweedehandswagens en takeldienst vanuit Hamme.</p><img class="gb-network-logo" src="<?php echo esc_url($network_logo); ?>" alt="1,2,3 AutoService"><span class="gb-network-note">Aangesloten bij 1,2,3 AutoService</span></div>
         <div><span class="gb-footer-label">Adres</span><strong>Zonneke 4</strong><strong>9220 Hamme</strong></div>
-        <div><span class="gb-footer-label">Garage</span><a href="tel:+3252570557">+32 52 57 05 57</a><a href="tel:+32477353547">+32 477 35 35 47</a></div>
+        <div><span class="gb-footer-label">Garage &amp; Takeldienst</span><a href="tel:+32477353547">+32 477 35 35 47</a></div>
         <div><span class="gb-footer-label">Openingsuren</span><strong>Maandag – vrijdag</strong><span>08:30 – 12:00</span><span>13:00 – 18:00</span><span>Zaterdag – zondag gesloten</span></div>
         <div class="gb-footer-towing"><img class="gb-footer-towing-logo" src="<?php echo esc_url($towing_logo); ?>" alt="Takeldienst Barnes 24/7"><strong>24 uur / 7 dagen</strong><a class="gb-button gb-button-green" href="<?php echo esc_url(home_url('/takeldienst/')); ?>">Pechhulp &amp; takeldienst</a></div>
     </div><div class="gb-shell gb-footer-bottom"><span>© <?php echo esc_html(wp_date('Y')); ?> Garage Barnes BV</span><span>website by <a href="https://www.murceke.media" target="_blank" rel="noopener noreferrer">Murceke Media</a></span></div></footer>
