@@ -8,8 +8,8 @@ add_action('wp_head', function () {
     if (!is_page('auto-service')) { return; }
     ?>
     <style id="gb-auto-service-grid-css">
-      /* Keep the grid itself transparent so an odd final cell stays genuinely empty. */
       .gb-page .gb-service-list{
+        grid-template-columns:repeat(2,minmax(0,1fr))!important;
         background:transparent!important;
         gap:1px!important;
       }
@@ -21,7 +21,6 @@ add_action('wp_head', function () {
         font-weight:700!important;
         line-height:1.45;
       }
-      /* Only the explanatory text underneath a service title is lighter. */
       .gb-page .gb-service-list>span small{
         display:block;
         margin-top:8px;
@@ -31,11 +30,11 @@ add_action('wp_head', function () {
         color:#666;
       }
 
-      /* Requested first row: repairs left, roadside help at home right. */
+      /* Eerste rij: herstellingen links, pechverhelping aan huis rechts. */
       .gb-page .gb-service-list>span:nth-child(2){order:1}
       .gb-page .gb-service-list>span:nth-child(8){order:2}
 
-      /* Remaining services continue in a clean, logical two-column flow. */
+      /* Daarna 10 diensten: exact 6 items per kolom. */
       .gb-page .gb-service-list>span:nth-child(1){order:3}
       .gb-page .gb-service-list>span:nth-child(3){order:4}
       .gb-page .gb-service-list>span:nth-child(4){order:5}
@@ -46,7 +45,6 @@ add_action('wp_head', function () {
       .gb-page .gb-service-list>span:nth-child(10){order:10}
       .gb-page .gb-service-list>span:nth-child(11){order:11}
       .gb-page .gb-service-list>span:nth-child(12){order:12}
-      .gb-page .gb-service-list>span:nth-child(13){order:13}
 
       @media(max-width:700px){
         .gb-page .gb-service-list{grid-template-columns:1fr!important}
