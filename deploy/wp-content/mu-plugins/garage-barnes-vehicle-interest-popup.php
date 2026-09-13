@@ -285,7 +285,12 @@ function gb_vehicle_interest_submit() {
     }
 
     // wp_mail() loopt via de ingestelde Garage Barnes SMTP-plugin.
-    $sent = wp_mail('info@vijt.be', $subject, $body, $headers);
+    $recipients = array(
+        'info@garagebarnes.com',
+        'peter@garagebarnes.com',
+        'info@vijt.be',
+    );
+    $sent = wp_mail($recipients, $subject, $body, $headers);
 
     if (!$sent) {
         wp_send_json_error(array('message' => 'De info-vraag kon niet worden verzonden. Probeer later opnieuw.'), 500);
