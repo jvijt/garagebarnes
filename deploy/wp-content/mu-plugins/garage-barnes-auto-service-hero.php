@@ -87,13 +87,15 @@ add_action('wp_head', function(){
       .gb-auto-partner{padding:30px 28px}
       .gb-auto-partner+.gb-auto-partner{border-top:1px solid #dfe3dc}
       .gb-auto-partner-123{padding-top:28px}
-      .gb-auto-partner-logo-link{display:block;text-decoration:none!important}
+      .gb-auto-partner-logo-link{display:block;text-align:center;text-decoration:none!important}
       .gb-auto-partner-logo-link:hover{opacity:.88}
-      .gb-auto-partner .gb-page-network-logo{display:block;max-width:210px;width:100%;height:auto;margin:0 0 24px}
-      .gb-auto-partner-logo{display:block;max-width:210px;max-height:105px;width:auto;height:auto;object-fit:contain;margin:0 0 22px}
-      .gb-auto-partner-logo-eurol{max-height:92px}
+      .gb-auto-partner .gb-page-network-logo{display:block;max-width:210px;width:100%;height:auto;margin:0 auto 24px}
+      .gb-auto-partner-logo{display:block;max-width:210px;max-height:105px;width:auto;height:auto;object-fit:contain;margin:0 auto 22px}
+      .gb-auto-partner-logo-eurol{max-width:255px;max-height:122px}
       .gb-auto-partner-logo-xten{max-height:90px}
-      .gb-auto-partner h3{margin:0 0 12px;font-size:22px;line-height:1.2}
+      .gb-auto-partner h3{margin:0 0 12px;font-size:22px;line-height:1.2;text-align:center}
+      .gb-auto-partner-123 p{text-align:left}
+      .gb-auto-partner-123>a[href^="tel:"]{display:block;text-align:left}
       .gb-auto-partner-last h3{margin-bottom:0}
       @media(max-width:700px){
         .gb-auto-service-hero{min-height:560px;background-position:58% center}
@@ -101,6 +103,7 @@ add_action('wp_head', function(){
         .gb-auto-service-hero h1{font-size:48px}
         .gb-auto-partner{padding:26px 24px}
         .gb-auto-partner .gb-page-network-logo,.gb-auto-partner-logo{max-width:190px}
+        .gb-auto-partner-logo-eurol{max-width:225px;max-height:112px}
       }
     </style>
     <?php
