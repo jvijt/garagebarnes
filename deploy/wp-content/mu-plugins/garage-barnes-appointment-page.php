@@ -87,7 +87,7 @@ function gb_appointment_form_html() {
           <input id="gb-appointment-website" type="text" name="website" tabindex="-1" autocomplete="off">
         </div>
 
-        <button type="submit" class="gb-button gb-button-green gb-appointment-submit">Verzend afspraakaanvraag</button>
+        <button type="submit" class="gb-button gb-button-green gb-appointment-submit">Vraag afspraak</button>
       </form>
     </div>
     <?php
@@ -161,7 +161,7 @@ add_action('wp_head', function () {
     if (!is_page('maak-afspraak')) { return; }
     ?>
     <style id="gb-appointment-page-css">
-      .gb-appointment-content{padding:80px 0 100px;background:#f5f6f3}
+      .gb-appointment-content{padding:80px 0 100px;background:#fff}
       .gb-appointment-form-area{max-width:860px;margin:0 auto}
       .gb-appointment-card{background:#fff;border:1px solid #dfe3dc;box-shadow:0 16px 42px rgba(0,0,0,.07);padding:46px}
       .gb-appointment-card-head{margin-bottom:32px}
@@ -179,7 +179,8 @@ add_action('wp_head', function () {
       .gb-appointment-contact-choice legend{padding:0 6px;margin-left:-6px}
       .gb-appointment-contact-choice label{display:inline-flex;align-items:center;gap:8px;margin-right:28px;font-weight:700;cursor:pointer}
       .gb-appointment-contact-choice input{accent-color:#5dc01d}
-      .gb-appointment-submit{width:100%;min-height:54px;border:0!important;font-size:17px!important;font-weight:800!important;cursor:pointer}
+      .gb-appointment-submit{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:100%;min-height:54px;padding:14px 24px!important;border:0!important;border-radius:3px!important;background:#5dc01d!important;color:#fff!important;font-size:17px!important;font-weight:800!important;line-height:1.2!important;text-align:center!important;text-decoration:none!important;box-shadow:none!important;cursor:pointer}
+      .gb-appointment-submit:hover,.gb-appointment-submit:focus{background:#469714!important;color:#fff!important}
       .gb-appointment-notice{margin:0 0 25px;padding:15px 17px;border-left:4px solid;font-weight:700;line-height:1.5}
       .gb-appointment-success{background:#eef8e9;border-color:#5dc01d;color:#315a1c}
       .gb-appointment-error{background:#fff2f2;border-color:#bd2b2b;color:#7e1d1d}
