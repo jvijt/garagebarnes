@@ -8,11 +8,21 @@ function gb_vehicle_interest_popup_nonce() {
     return wp_create_nonce('gb_vehicle_interest_popup');
 }
 
+function gb_vehicle_interest_recaptcha_settings() {
+    $saved = get_option('garage_barnes_smtp_settings', array());
+    return array(
+        'site_key'  => isset($saved['recaptcha_site_key']) ? trim((string) $saved['recaptcha_site_key']) : '',
+        'secret'    => isset($saved['recaptcha_secret_key']) ? trim((string) $saved['recaptcha_secret_key']) : '',
+        'threshold' => isset($saved['recaptcha_threshold']) ? (float) $saved['recaptcha_threshold'] : 0.5,
+    );
+}
+
 add_action('wp_footer', function () {
     if (!is_singular('gb_vehicle')) { return; }
 
     $vehicle_id = get_queried_object_id();
     $vehicle_title = get_the_title($vehicle_id);
+    $recaptcha = gb_vehicle_interest_recaptcha_settings();
     ?>
     <div class="gbvi-modal" id="gbvi-modal" aria-hidden="true">
       <div class="gbvi-modal-backdrop" data-gbvi-close></div>
@@ -26,6 +36,7 @@ add_action('wp_footer', function () {
           <input type="hidden" name="action" value="gb_vehicle_interest_submit">
           <input type="hidden" name="nonce" value="<?php echo esc_attr(gb_vehicle_interest_popup_nonce()); ?>">
           <input type="hidden" name="vehicle_id" value="<?php echo esc_attr($vehicle_id); ?>">
+          <input type="hidden" name="recaptcha_token" value="">
           <input type="text" name="website" value="" class="gbvi-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
 
           <div class="gbvi-field">
@@ -52,6 +63,7 @@ add_action('wp_footer', function () {
 
           <div class="gbvi-status" id="gbvi-status" aria-live="polite"></div>
           <button type="submit" class="gb-button gb-button-green gbvi-submit">Verzend info-vraag</button>
+          <?php if (!empty($recaptcha['site_key'])): ?><p class="gbvi-recaptcha-note">Beveiligd met reCAPTCHA.</p><?php endif; ?>
         </form>
       </div>
     </div>
@@ -78,11 +90,15 @@ add_action('wp_footer', function () {
       .gbvi-modal-dialog .gbvi-submit,.gbvi-modal-dialog button.gbvi-submit{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-height:50px!important;padding:13px 24px!important;border:0!important;border-radius:3px!important;background:var(--gb-green,#5dc01d)!important;color:#fff!important;font-weight:800!important;line-height:1.2!important;text-align:center!important;text-decoration:none!important;cursor:pointer!important;box-shadow:none!important}
       .gbvi-modal-dialog .gbvi-submit:hover,.gbvi-modal-dialog .gbvi-submit:focus{background:#469714!important;color:#fff!important}
       .gbvi-submit[disabled]{opacity:.65;cursor:wait!important}
+      .gbvi-recaptcha-note{margin:9px 0 0;text-align:center;color:#888;font-size:11px}
       .gbvi-hp{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
       body.gbvi-modal-open{overflow:hidden}
       @media(max-width:620px){.gbvi-modal{padding:14px}.gbvi-modal-dialog{padding:27px 20px}.gbvi-modal-dialog h2{font-size:25px}.gbvi-contact-grid{grid-template-columns:1fr;gap:0}}
     </style>
 
+    <?php if (!empty($recaptcha['site_key'])): ?>
+      <script src="https://www.google.com/recaptcha/api.js?render=<?php echo rawurlencode($recaptcha['site_key']); ?>"></script>
+    <?php endif; ?>
     <script>
     document.addEventListener('DOMContentLoaded', function(){
       var modal=document.getElementById('gbvi-modal');
@@ -90,6 +106,7 @@ add_action('wp_footer', function () {
       var status=document.getElementById('gbvi-status');
       var submit=form ? form.querySelector('.gbvi-submit') : null;
       var trigger=document.querySelector('.gbvd-contact');
+      var recaptchaSiteKey=<?php echo wp_json_encode($recaptcha['site_key']); ?>;
       if(!modal || !form || !trigger) return;
 
       trigger.setAttribute('href','#');
@@ -106,6 +123,25 @@ add_action('wp_footer', function () {
         modal.setAttribute('aria-hidden','true');
         document.body.classList.remove('gbvi-modal-open');
         trigger.focus();
+      }
+
+      function sendForm(){
+        var data=new FormData(form);
+        fetch('<?php echo esc_url(admin_url('admin-ajax.php')); ?>',{method:'POST',body:data,credentials:'same-origin'})
+          .then(function(r){return r.json();})
+          .then(function(resp){
+            if(resp && resp.success){
+              status.className='gbvi-status is-success';
+              status.textContent='Bedankt. Uw info-vraag is verzonden.';
+              form.reset();
+              setTimeout(closeModal,2200);
+            }else{
+              status.className='gbvi-status is-error';
+              status.textContent=(resp && resp.data && resp.data.message) ? resp.data.message : 'Verzenden is niet gelukt. Probeer opnieuw.';
+            }
+          })
+          .catch(function(){status.className='gbvi-status is-error';status.textContent='Verzenden is niet gelukt. Probeer opnieuw.';})
+          .finally(function(){submit.disabled=false;submit.textContent='Verzend info-vraag';});
       }
 
       trigger.addEventListener('click',function(e){e.preventDefault();openModal();});
@@ -126,27 +162,75 @@ add_action('wp_footer', function () {
 
         submit.disabled=true;
         submit.textContent='Verzenden…';
-        var data=new FormData(form);
-        fetch('<?php echo esc_url(admin_url('admin-ajax.php')); ?>',{method:'POST',body:data,credentials:'same-origin'})
-          .then(function(r){return r.json();})
-          .then(function(resp){
-            if(resp && resp.success){
-              status.className='gbvi-status is-success';
-              status.textContent='Bedankt. Uw info-vraag is verzonden.';
-              form.reset();
-              setTimeout(closeModal,2200);
-            }else{
-              status.className='gbvi-status is-error';
-              status.textContent=(resp && resp.data && resp.data.message) ? resp.data.message : 'Verzenden is niet gelukt. Probeer opnieuw.';
-            }
-          })
-          .catch(function(){status.className='gbvi-status is-error';status.textContent='Verzenden is niet gelukt. Probeer opnieuw.';})
-          .finally(function(){submit.disabled=false;submit.textContent='Verzend info-vraag';});
+
+        if(!recaptchaSiteKey){
+          status.className='gbvi-status is-error';
+          status.textContent='reCAPTCHA is nog niet geconfigureerd. Probeer later opnieuw.';
+          submit.disabled=false;
+          submit.textContent='Verzend info-vraag';
+          return;
+        }
+        if(typeof grecaptcha==='undefined'){
+          status.className='gbvi-status is-error';
+          status.textContent='De spambeveiliging kon niet worden geladen. Probeer opnieuw.';
+          submit.disabled=false;
+          submit.textContent='Verzend info-vraag';
+          return;
+        }
+
+        grecaptcha.ready(function(){
+          grecaptcha.execute(recaptchaSiteKey,{action:'vehicle_interest'}).then(function(token){
+            form.elements.recaptcha_token.value=token;
+            sendForm();
+          }).catch(function(){
+            status.className='gbvi-status is-error';
+            status.textContent='De spambeveiliging kon niet worden uitgevoerd. Probeer opnieuw.';
+            submit.disabled=false;
+            submit.textContent='Verzend info-vraag';
+          });
+        });
       });
     });
     </script>
     <?php
 }, 80);
+
+function gb_vehicle_interest_verify_recaptcha($token) {
+    $settings = gb_vehicle_interest_recaptcha_settings();
+    if ($settings['site_key'] === '' || $settings['secret'] === '') {
+        return new WP_Error('recaptcha_not_configured', 'reCAPTCHA is nog niet volledig geconfigureerd.');
+    }
+    if ($token === '') {
+        return new WP_Error('recaptcha_missing', 'Spamcontrole ontbreekt. Vernieuw de pagina en probeer opnieuw.');
+    }
+
+    $response = wp_remote_post('https://www.google.com/recaptcha/api/siteverify', array(
+        'timeout' => 10,
+        'body' => array(
+            'secret'   => $settings['secret'],
+            'response' => $token,
+            'remoteip' => isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : '',
+        ),
+    ));
+
+    if (is_wp_error($response)) {
+        return new WP_Error('recaptcha_request_failed', 'Spamcontrole kon niet worden uitgevoerd. Probeer opnieuw.');
+    }
+
+    $data = json_decode(wp_remote_retrieve_body($response), true);
+    if (!is_array($data) || empty($data['success'])) {
+        return new WP_Error('recaptcha_failed', 'Spamcontrole niet geslaagd. Probeer opnieuw.');
+    }
+    if (!empty($data['action']) && $data['action'] !== 'vehicle_interest') {
+        return new WP_Error('recaptcha_action', 'Spamcontrole niet geslaagd.');
+    }
+    $score = isset($data['score']) ? (float) $data['score'] : 0;
+    if ($score < $settings['threshold']) {
+        return new WP_Error('recaptcha_score', 'Spamcontrole niet geslaagd. Probeer opnieuw.');
+    }
+
+    return true;
+}
 
 function gb_vehicle_interest_submit() {
     if (!check_ajax_referer('gb_vehicle_interest_popup', 'nonce', false)) {
@@ -155,6 +239,12 @@ function gb_vehicle_interest_submit() {
 
     if (!empty($_POST['website'])) {
         wp_send_json_success();
+    }
+
+    $recaptcha_token = isset($_POST['recaptcha_token']) ? sanitize_text_field(wp_unslash($_POST['recaptcha_token'])) : '';
+    $captcha = gb_vehicle_interest_verify_recaptcha($recaptcha_token);
+    if (is_wp_error($captcha)) {
+        wp_send_json_error(array('message' => $captcha->get_error_message()), 403);
     }
 
     $vehicle_id = isset($_POST['vehicle_id']) ? absint($_POST['vehicle_id']) : 0;
