@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) { exit; }
 function gb_auto_service_hero_shortcode(){
     $network = GB_PLUGIN_URL . 'assets/img/123-autoservice-logo.png';
     $hero = 'https://garagebarnes.be/wp-content/uploads/2026/09/Motor-Garage-Barnes-Hamme-scaled.jpg';
+    $workshop = 'https://garagebarnes.be/wp-content/uploads/2026/09/garage-barnes-werkplaats.jpg';
     $eurol = 'https://garagebarnes.be/wp-content/uploads/2026/09/Logo-Eurol-Service-Point.png';
     $xten = 'https://garagebarnes.be/wp-content/uploads/2026/09/logo-X-ten-additieven.png';
 
@@ -24,42 +25,48 @@ function gb_auto_service_hero_shortcode(){
       </section>
 
       <section class="gb-page-content"><div class="gb-shell">
-        <div class="gb-content-grid"><div>
-          <h2>Onderhoud en herstellingen voor alle merken</h2>
-          <p>Garage Barnes staat in voor klein en groot onderhoud, herstellingen en technische diagnose. We communiceren duidelijk en voeren geen bijkomende werken uit zonder uw toestemming.</p>
-          <div class="gb-service-list">
-            <span>Klein en groot onderhoud</span>
-            <span>Allerlei herstellingen <small>Remmen, remschijven, koppeling, versnellingsbak, glasbreuk, distributieriem of ketting, schokdempers, injectoren, waterpompen, uitlaten en nog veel meer…</small></span>
-            <span>Motorwissels</span>
-            <span>Elektrische diagnose</span>
-            <span>Airco onderhoud en herstelling</span>
-            <span>Batterijen en banden</span>
-            <span>Depannages</span>
-            <span>Pechverhelping aan huis <small>Platte batterij/band, sleutels in je wagen</small></span>
-            <span>Nazicht keuring</span>
-            <span>Keuring</span>
-            <span>Reisnazicht</span>
-            <span>Expertise na ongeval</span>
+        <div class="gb-content-grid">
+          <div class="gb-auto-service-main-column">
+            <h2>Onderhoud en herstellingen voor alle merken</h2>
+            <p>Garage Barnes staat in voor klein en groot onderhoud, herstellingen en technische diagnose. We communiceren duidelijk en voeren geen bijkomende werken uit zonder uw toestemming.</p>
+            <div class="gb-service-list">
+              <span>Klein en groot onderhoud</span>
+              <span>Allerlei herstellingen <small>Remmen, remschijven, koppeling, versnellingsbak, glasbreuk, distributieriem of ketting, schokdempers, injectoren, waterpompen, uitlaten en nog veel meer…</small></span>
+              <span>Motorwissels</span>
+              <span>Elektrische diagnose</span>
+              <span>Airco onderhoud en herstelling</span>
+              <span>Batterijen en banden</span>
+              <span>Depannages</span>
+              <span>Pechverhelping aan huis <small>Platte batterij/band, sleutels in je wagen</small></span>
+              <span>Nazicht keuring</span>
+              <span>Keuring</span>
+              <span>Reisnazicht</span>
+              <span>Expertise na ongeval</span>
+            </div>
+            <div class="gb-auto-service-workshop-photo">
+              <img src="<?php echo esc_url($workshop); ?>" alt="Werkplaats Garage Barnes in Hamme" loading="lazy">
+            </div>
           </div>
-        </div><aside class="gb-side-card gb-auto-partners">
-          <div class="gb-auto-partner gb-auto-partner-123">
-            <a class="gb-auto-partner-logo-link" href="https://www.123autoservice.be/nl/" target="_blank" rel="noopener noreferrer" aria-label="Bezoek de website van 1,2,3 AutoService">
-              <img class="gb-page-network-logo" src="<?php echo esc_url($network); ?>" alt="1,2,3 AutoService">
-            </a>
-            <h3>Persoonlijke garageservice</h3>
-            <p>Een lokaal aanspreekpunt met technische kennis, snelle service en transparante communicatie.</p>
-          </div>
+          <aside class="gb-side-card gb-auto-partners">
+            <div class="gb-auto-partner gb-auto-partner-123">
+              <a class="gb-auto-partner-logo-link" href="https://www.123autoservice.be/nl/" target="_blank" rel="noopener noreferrer" aria-label="Bezoek de website van 1,2,3 AutoService">
+                <img class="gb-page-network-logo" src="<?php echo esc_url($network); ?>" alt="1,2,3 AutoService">
+              </a>
+              <h3>Persoonlijke garageservice</h3>
+              <p>Een lokaal aanspreekpunt met technische kennis, snelle service en transparante communicatie.</p>
+            </div>
 
-          <div class="gb-auto-partner">
-            <img class="gb-auto-partner-logo gb-auto-partner-logo-eurol" src="<?php echo esc_url($eurol); ?>" alt="Eurol Service Point">
-            <h3>Eurol Service Point</h3>
-          </div>
+            <div class="gb-auto-partner">
+              <img class="gb-auto-partner-logo gb-auto-partner-logo-eurol" src="<?php echo esc_url($eurol); ?>" alt="Eurol Service Point">
+              <h3>Eurol Service Point</h3>
+            </div>
 
-          <div class="gb-auto-partner gb-auto-partner-last">
-            <img class="gb-auto-partner-logo gb-auto-partner-logo-xten" src="<?php echo esc_url($xten); ?>" alt="X-ten additieven">
-            <h3>Verdeler X-ten additieven</h3>
-          </div>
-        </aside></div>
+            <div class="gb-auto-partner gb-auto-partner-last">
+              <img class="gb-auto-partner-logo gb-auto-partner-logo-xten" src="<?php echo esc_url($xten); ?>" alt="X-ten additieven">
+              <h3>Verdeler X-ten additieven</h3>
+            </div>
+          </aside>
+        </div>
       </div></section>
 
       <section class="gb-auto-service-highlight-cta">
@@ -120,6 +127,8 @@ add_action('wp_head', function(){
       .gb-auto-service-hero .gb-eyebrow{color:#a6ec79}
       .gb-auto-service-hero h1{max-width:760px}
       .gb-auto-service-hero p{max-width:650px}
+      .gb-auto-service-page .gb-content-grid{align-items:stretch!important}
+      .gb-auto-service-main-column{display:flex;flex-direction:column;min-width:0}
       .gb-auto-partners{padding:0!important;overflow:hidden}
       .gb-auto-partner{padding:30px 28px}
       .gb-auto-partner+.gb-auto-partner{border-top:1px solid #dfe3dc}
@@ -133,6 +142,8 @@ add_action('wp_head', function(){
       .gb-auto-service-page .gb-auto-partner h3{margin:0 0 12px!important;font-size:22px!important;line-height:1.2!important;text-align:center!important}
       .gb-auto-service-page .gb-auto-partner-123 p{text-align:left!important}
       .gb-auto-partner-last h3{margin-bottom:0!important}
+      .gb-auto-service-workshop-photo{position:relative;flex:1 1 auto;min-height:220px;margin-top:28px;overflow:hidden;background:#f2f3f0}
+      .gb-auto-service-workshop-photo img{display:block;width:100%!important;height:100%!important;position:absolute;inset:0;object-fit:cover!important;object-position:center center}
 
       .gb-auto-service-highlight-cta{padding:26px 0 70px;background:#fff}
       .gb-auto-service-highlight-inner{display:flex;align-items:center;justify-content:space-between;gap:40px;padding:42px 46px;background:#111;color:#fff;border-left:7px solid #5dc01d;box-shadow:0 18px 46px rgba(0,0,0,.14)}
@@ -164,6 +175,7 @@ add_action('wp_head', function(){
         .gb-auto-partner{padding:26px 24px}
         .gb-auto-service-page .gb-auto-partner .gb-page-network-logo,.gb-auto-service-page .gb-auto-partner-logo{max-width:190px!important}
         .gb-auto-service-page .gb-auto-partner-logo-eurol{max-width:250px!important;max-height:130px!important}
+        .gb-auto-service-workshop-photo{flex:none;min-height:0;aspect-ratio:16/9;margin-top:24px}
         .gb-auto-service-highlight-cta{padding:15px 0 55px}
         .gb-auto-service-video-section,.gb-auto-service-gallery-section{padding:58px 0}
       }
