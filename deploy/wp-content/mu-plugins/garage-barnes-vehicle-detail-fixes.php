@@ -31,29 +31,35 @@ add_action('wp_head', function () {
         display:block!important;
       }
 
-      /* Desktop: keep the complete photo section visually level with the info card. */
+      /* Desktop: fixed gallery dimensions, independent of the selected image ratio. */
       @media (min-width:981px) {
-        body.single-gb_vehicle .gbvd-top{align-items:stretch!important}
+        body.single-gb_vehicle .gbvd-top{align-items:start!important}
         body.single-gb_vehicle .gbvd-gallery-wrap{
-          height:100%;
           display:flex;
           flex-direction:column;
+          height:auto;
+          min-height:0;
         }
         body.single-gb_vehicle .gbvd-main-image{
           aspect-ratio:auto!important;
-          flex:1 1 auto;
-          min-height:0;
+          height:var(--gbvd-gallery-photo-height,520px)!important;
+          min-height:0!important;
+          flex:0 0 var(--gbvd-gallery-photo-height,520px)!important;
           background:#fff!important;
-          overflow:hidden;
+          overflow:hidden!important;
         }
         body.single-gb_vehicle .gbvd-main-image img{
+          display:block!important;
           width:100%!important;
           height:100%!important;
+          min-height:0!important;
+          max-height:none!important;
           object-fit:cover!important;
-          object-position:center!important;
+          object-position:50% 50%!important;
         }
         body.single-gb_vehicle .gbvd-thumbs{
           flex:0 0 82px;
+          height:82px;
           box-sizing:border-box;
           padding:8px 12px!important;
           align-items:center;
@@ -66,9 +72,27 @@ add_action('wp_head', function () {
         }
         body.single-gb_vehicle .gbvd-summary{
           position:static!important;
-          height:auto;
         }
       }
     </style>
+    <script id="gb-vehicle-gallery-height-fix">
+    document.addEventListener('DOMContentLoaded',function(){
+      if(!window.matchMedia('(min-width:981px)').matches)return;
+      var top=document.querySelector('.gbvd-top');
+      var summary=document.querySelector('.gbvd-summary');
+      var gallery=document.querySelector('.gbvd-gallery-wrap');
+      var thumbs=gallery?gallery.querySelector('.gbvd-thumbs'):null;
+      if(!top||!summary||!gallery)return;
+      function lockGalleryHeight(){
+        var summaryHeight=Math.round(summary.getBoundingClientRect().height);
+        var thumbsHeight=thumbs?Math.round(thumbs.getBoundingClientRect().height):0;
+        var photoHeight=Math.max(300,summaryHeight-thumbsHeight);
+        gallery.style.setProperty('--gbvd-gallery-photo-height',photoHeight+'px');
+      }
+      lockGalleryHeight();
+      window.addEventListener('load',lockGalleryHeight,{once:true});
+      window.addEventListener('resize',lockGalleryHeight);
+    });
+    </script>
     <?php
 }, 60);
