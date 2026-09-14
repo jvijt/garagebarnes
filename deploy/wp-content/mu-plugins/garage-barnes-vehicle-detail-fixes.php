@@ -30,6 +30,45 @@ add_action('wp_head', function () {
       body.single-gb_vehicle .gbvd-thumb img {
         display:block!important;
       }
+
+      /* Desktop: keep the complete photo section visually level with the info card. */
+      @media (min-width:981px) {
+        body.single-gb_vehicle .gbvd-top{align-items:stretch!important}
+        body.single-gb_vehicle .gbvd-gallery-wrap{
+          height:100%;
+          display:flex;
+          flex-direction:column;
+        }
+        body.single-gb_vehicle .gbvd-main-image{
+          aspect-ratio:auto!important;
+          flex:1 1 auto;
+          min-height:0;
+          background:#fff!important;
+          overflow:hidden;
+        }
+        body.single-gb_vehicle .gbvd-main-image img{
+          width:100%!important;
+          height:100%!important;
+          object-fit:cover!important;
+          object-position:center!important;
+        }
+        body.single-gb_vehicle .gbvd-thumbs{
+          flex:0 0 82px;
+          box-sizing:border-box;
+          padding:8px 12px!important;
+          align-items:center;
+          background:#fff;
+        }
+        body.single-gb_vehicle .gbvd-thumb{
+          width:82px!important;
+          height:60px!important;
+          flex-basis:82px!important;
+        }
+        body.single-gb_vehicle .gbvd-summary{
+          position:static!important;
+          height:auto;
+        }
+      }
     </style>
     <?php
 }, 60);
