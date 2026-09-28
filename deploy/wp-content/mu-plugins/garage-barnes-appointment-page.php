@@ -70,7 +70,7 @@ function gb_handle_appointment_request(){
     $valid_contact_method=in_array($contact_method,array('email','phone'),true);$preferred_contact_ok=($contact_method==='email'&&is_email($email))||($contact_method==='phone'&&$phone!=='');if($name===''||$message===''||!$valid_contact_method||!$preferred_contact_ok){wp_safe_redirect(add_query_arg('afspraak','invalid',$redirect));exit;}
     $contact_label=$contact_method==='email'?'E-mail':'Telefoon';$subject='Nieuwe afspraakaanvraag via garagebarnes.be - '.$name;$body="Nieuwe afspraakaanvraag via garagebarnes.be\n\nNaam: {$name}\nGSM: ".($phone!==''?$phone:'-')."\nE-mail: ".($email!==''?$email:'-')."\nVoorkeur contact: {$contact_label}\nNummerplaat: ".($plate!==''?$plate:'-')."\n\nWaarvoor afspraak:\n{$message}\n\nPagina: ".home_url('/maak-afspraak/')."\n";
     $headers=array('Content-Type: text/plain; charset=UTF-8');if(is_email($email))$headers[]='Reply-To: '.$name.' <'.$email.'>';
-    $sent=wp_mail('info@vijt.be',$subject,$body,$headers);
+    $sent=wp_mail('info@garagebarnes.com',$subject,$body,$headers);
     wp_safe_redirect(add_query_arg('afspraak',$sent?'sent':'error',$redirect));exit;
 }
 add_action('admin_post_gb_submit_appointment_request','gb_handle_appointment_request');add_action('admin_post_nopriv_gb_submit_appointment_request','gb_handle_appointment_request');
