@@ -104,7 +104,7 @@ function gb_auto_service_hero_shortcode(){
         <div class="gb-shell">
           <div class="gb-auto-service-section-heading">
             <span class="gb-kicker">Onze werkplaats</span>
-            <h2>Foto's van Garage Barnes</h2>
+            <h2>Garage Barnes in beeld</h2>
             <p>Een blik achter de schermen in onze garage in Hamme. Klik op een foto om ze groter te bekijken.</p>
           </div>
           <div class="gb-auto-gallery-grid">
