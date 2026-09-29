@@ -8,6 +8,7 @@ add_action('wp_head', function () {
     if (!is_page('contact')) { return; }
     ?>
     <style id="gb-contact-map-fixed-css">
+      .gb-page-cta .gb-page-cta-inner h2{font-size:clamp(30px,3vw,44px)!important;line-height:1.08!important;margin:6px 0 0!important}
       .gb-contact-map-fixed{
         width:min(1180px,calc(100% - 40px));
         margin:34px auto 24px;
