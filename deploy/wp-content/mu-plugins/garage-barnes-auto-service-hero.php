@@ -161,6 +161,7 @@ add_action('wp_head', function(){
       .gb-auto-service-workshop-photo img{display:block;width:100%!important;height:100%!important;position:absolute;inset:0;object-fit:cover!important;object-position:center center}
 
       .gb-auto-service-highlight-cta{padding:26px 0 70px;background:#fff}
+      .gb-page-cta .gb-page-cta-inner h2{font-size:clamp(30px,3vw,44px);line-height:1.08;margin:6px 0 0}
       .gb-auto-service-highlight-inner{display:flex;align-items:center;justify-content:space-between;gap:40px;padding:42px 46px;background:#111;color:#fff;border-left:7px solid #5dc01d;box-shadow:0 18px 46px rgba(0,0,0,.14)}
       .gb-auto-service-highlight-inner .gb-kicker{color:#a6ec79}
       .gb-auto-service-highlight-inner h2{margin:5px 0 8px!important;color:#fff!important;font-size:clamp(30px,4vw,44px)!important;line-height:1.08!important}
