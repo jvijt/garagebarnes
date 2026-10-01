@@ -372,8 +372,10 @@ function gbv2_single_content($content) {
 add_filter('the_content', 'gbv2_single_content', 20);
 
 function gbv2_flush_rewrite_once() {
-    if (get_option('gb_vehicle_rewrite_v2_done')) { return; }
+    // Version this flag so routing changes are actually propagated on existing installs.
+    // The previous one-time v2 flag can already be set while /wagen/... rules are stale.
+    if (get_option('gb_vehicle_rewrite_v3_done')) { return; }
     flush_rewrite_rules(false);
-    update_option('gb_vehicle_rewrite_v2_done', 1, false);
+    update_option('gb_vehicle_rewrite_v3_done', 1, false);
 }
 add_action('init', 'gbv2_flush_rewrite_once', 99);
