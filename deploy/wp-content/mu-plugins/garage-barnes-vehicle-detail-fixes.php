@@ -57,19 +57,6 @@ add_action('wp_head', function () {
           object-fit:cover!important;
           object-position:50% 50%!important;
         }
-        body.single-gb_vehicle .gbvd-thumbs{
-          flex:0 0 82px;
-          height:82px;
-          box-sizing:border-box;
-          padding:8px 12px!important;
-          align-items:center;
-          background:#fff;
-        }
-        body.single-gb_vehicle .gbvd-thumb{
-          width:82px!important;
-          height:60px!important;
-          flex-basis:82px!important;
-        }
         body.single-gb_vehicle .gbvd-summary{
           position:static!important;
         }
